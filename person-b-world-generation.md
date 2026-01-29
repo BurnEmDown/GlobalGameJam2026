@@ -13,7 +13,7 @@ You're responsible for creating the infinite world that the player skis through.
 2. **Obstacle spawning** in lanes (trees, rocks, branches)
 3. **Pickup spawning** (hot drinks, fire icons)
 4. **Billboard system** so sprites always face the camera
-5. **Object pooling** for performance optimization
+5. **Integration with UnityCoreKit** (UpdateManagers and Pooling Service)
 
 ---
 
@@ -43,8 +43,9 @@ Steps:
 ```csharp
 using UnityEngine;
 using System.Collections.Generic;
+using UnityCoreKit.UpdateManagers;
 
-public class ChunkManager : MonoBehaviour
+public class ChunkManager : MonoBehaviour, IUpdateObserver
 {
     [Header("Chunk Settings")]
     public GameObject chunkPrefab;
@@ -61,6 +62,9 @@ public class ChunkManager : MonoBehaviour
     
     void Start()
     {
+        // Register with UpdateManager
+        UpdateManager.Instance.Register(this);
+        
         // Spawn initial chunks
         for (int i = 0; i < activeChunkCount; i++)
         {
@@ -68,10 +72,16 @@ public class ChunkManager : MonoBehaviour
         }
     }
     
-    void Update()
+    void OnDestroy()
+    {
+        // Unregister from UpdateManager
+        UpdateManager.Instance?.Unregister(this);
+    }
+    
+    public void ObservedUpdate()
     {
         // Check if we need to spawn a new chunk
-        if (player.position.z > nextSpawnZ - spawnDistance)
+        if (player != null && player.position.z > nextSpawnZ - spawnDistance)
         {
             SpawnChunk();
             DespawnOldChunk();
@@ -126,17 +136,24 @@ public class ChunkManager : MonoBehaviour
 
 ```csharp
 using UnityEngine;
+using UnityCoreKit.UpdateManagers;
 
-public class Billboard : MonoBehaviour
+public class Billboard : MonoBehaviour, ILateUpdateObserver
 {
     private Camera mainCamera;
     
     void Start()
     {
         mainCamera = Camera.main;
+        LateUpdateManager.Instance.Register(this);
     }
     
-    void LateUpdate()
+    void OnDestroy()
+    {
+        LateUpdateManager.Instance?.Unregister(this);
+    }
+    
+    public void ObservedLateUpdate()
     {
         if (mainCamera == null) return;
         
@@ -153,7 +170,7 @@ public class Billboard : MonoBehaviour
 - Assign material
 - Set Billboard property to "Facing Camera Position"
 
-**Recommendation:** Use the custom script for more control, or Billboard Renderer for simplicity.
+**Recommendation:** Use the custom script with LateUpdateManager for better performance and consistency with UnityCoreKit architecture.
 
 ---
 
@@ -333,108 +350,14 @@ public class Pickup : MonoBehaviour
 
 ---
 
-### Phase 5: Object Pooling System (2 hours)
+### Phase 5: Procedural Spawner (3-4 hours)
 
-#### 5.1 Create ObjectPool.cs
-**Assets/Scripts/World/ObjectPool.cs**
-
-```csharp
-using UnityEngine;
-using System.Collections.Generic;
-
-public class ObjectPool : MonoBehaviour
-{
-    [System.Serializable]
-    public class Pool
-    {
-        public string tag;              // Identifier (e.g., "Tree", "Rock")
-        public GameObject prefab;
-        public int size;                // Initial pool size
-    }
-    
-    [Header("Pools")]
-    public List<Pool> pools;
-    
-    private Dictionary<string, Queue<GameObject>> poolDictionary;
-    
-    void Start()
-    {
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
-        
-        foreach (Pool pool in pools)
-        {
-            Queue<GameObject> objectPool = new Queue<GameObject>();
-            
-            for (int i = 0; i < pool.size; i++)
-            {
-                GameObject obj = Instantiate(pool.prefab);
-                obj.SetActive(false);
-                obj.transform.parent = transform;
-                objectPool.Enqueue(obj);
-            }
-            
-            poolDictionary.Add(pool.tag, objectPool);
-        }
-    }
-    
-    public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
-    {
-        if (!poolDictionary.ContainsKey(tag))
-        {
-            Debug.LogWarning($"Pool with tag {tag} doesn't exist.");
-            return null;
-        }
-        
-        GameObject objectToSpawn;
-        
-        if (poolDictionary[tag].Count > 0)
-        {
-            objectToSpawn = poolDictionary[tag].Dequeue();
-        }
-        else
-        {
-            // Pool exhausted, create new instance
-            objectToSpawn = Instantiate(pools.Find(p => p.tag == tag).prefab);
-            objectToSpawn.transform.parent = transform;
-        }
-        
-        objectToSpawn.SetActive(true);
-        objectToSpawn.transform.position = position;
-        objectToSpawn.transform.rotation = rotation;
-        
-        return objectToSpawn;
-    }
-    
-    public void ReturnToPool(string tag, GameObject obj)
-    {
-        obj.SetActive(false);
-        
-        if (poolDictionary.ContainsKey(tag))
-        {
-            poolDictionary[tag].Enqueue(obj);
-        }
-    }
-}
-```
-
-#### 5.2 Set Up Object Pool in Scene
-1. Select WorldManager GameObject
-2. Add ObjectPool component
-3. Set Pools list size to 3 (Tree, Rock, Pickup)
-4. For each pool:
-   - Tag: "Tree", "Rock", "HotPickup"
-   - Prefab: Drag corresponding prefab
-   - Size: 50 (for obstacles), 20 (for pickups)
-
----
-
-### Phase 6: Procedural Spawner (3-4 hours)
-
-#### 6.1 Implement ProceduralSpawner.cs
+#### 5.1 Implement ProceduralSpawner.cs
 **Assets/Scripts/World/ProceduralSpawner.cs**
 
 ```csharp
 using UnityEngine;
+using UnityCoreKit.Services;
 
 public class ProceduralSpawner : MonoBehaviour
 {
@@ -452,14 +375,25 @@ public class ProceduralSpawner : MonoBehaviour
     public int maxPickupsPerChunk = 5;
     public float pickupHeight = 0.5f;       // Slightly above ground
     
+    [Header("Prefab References")]
+    public GameObject treePrefab;
+    public GameObject rockPrefab;
+    public GameObject hotPickupPrefab;
+    
     [Header("Spacing")]
     public float minSpacing = 15f;          // Minimum distance between objects in same lane
     
-    private ObjectPool objectPool;
+    private IPoolingService poolingService;
     
     void Start()
     {
-        objectPool = GetComponent<ObjectPool>();
+        // Get the Pooling Service from UnityCoreKit
+        poolingService = ServiceLocator.Instance.Get<IPoolingService>();
+        
+        // Register prefabs with the pooling service
+        poolingService.RegisterPrefab("Tree", treePrefab, 50);
+        poolingService.RegisterPrefab("Rock", rockPrefab, 50);
+        poolingService.RegisterPrefab("HotPickup", hotPickupPrefab, 20);
     }
     
     public void PopulateChunk(float chunkStartZ, float chunkLength)
@@ -487,8 +421,8 @@ public class ProceduralSpawner : MonoBehaviour
             // Random obstacle type
             string obstacleType = Random.value > 0.5f ? "Tree" : "Rock";
             
-            // Spawn from pool
-            GameObject obstacle = objectPool.SpawnFromPool(obstacleType, position, Quaternion.identity);
+            // Spawn from pooling service
+            GameObject obstacle = poolingService.Spawn(obstacleType, position, Quaternion.identity);
             
             // Optional: Add slight random rotation around Y-axis for variety
             if (obstacle != null)
@@ -512,41 +446,45 @@ public class ProceduralSpawner : MonoBehaviour
             
             Vector3 position = new Vector3(x, pickupHeight, z);
             
-            // Spawn from pool
-            objectPool.SpawnFromPool("HotPickup", position, Quaternion.identity);
+            // Spawn from pooling service
+            poolingService.Spawn("HotPickup", position, Quaternion.identity);
         }
     }
 }
 ```
 
-#### 6.2 Connect to ChunkManager
+#### 5.2 Connect to ChunkManager
 1. Select WorldManager GameObject
 2. Add ProceduralSpawner component
 3. Configure settings in inspector:
    - Lanes: -2, -1, 0, 1, 2 (size: 5)
    - Min/Max Obstacles: 5/15
    - Min/Max Pickups: 2/5
+   - Assign Tree, Rock, and HotPickup prefabs
 4. Test: Run game, obstacles/pickups should spawn in chunks
 
 ---
 
-### Phase 7: Cleanup & Recycling (1 hour)
+### Phase 6: Cleanup & Recycling (1 hour)
 
-#### 7.1 Add Auto-Despawn Script
+#### 6.1 Add Auto-Despawn Script
 **Assets/Scripts/World/AutoDespawn.cs**
 
 ```csharp
 using UnityEngine;
+using UnityCoreKit.UpdateManagers;
+using UnityCoreKit.Services;
 
-public class AutoDespawn : MonoBehaviour
+public class AutoDespawn : MonoBehaviour, IUpdateObserver
 {
     [Header("Despawn Settings")]
     public float despawnDistance = 50f;  // Distance behind player to despawn
+    public string poolKey;               // Set this based on prefab type: "Tree", "Rock", "HotPickup"
     
     private Transform player;
-    private string poolTag;
+    private IPoolingService poolingService;
     
-    void Start()
+    void OnEnable()
     {
         // Find player (Person A will create this)
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -555,38 +493,37 @@ public class AutoDespawn : MonoBehaviour
             player = playerObj.transform;
         }
         
-        // Determine pool tag from object name
-        if (gameObject.name.Contains("Tree")) poolTag = "Tree";
-        else if (gameObject.name.Contains("Rock")) poolTag = "Rock";
-        else if (gameObject.name.Contains("Pickup")) poolTag = "HotPickup";
+        // Get pooling service
+        poolingService = ServiceLocator.Instance.Get<IPoolingService>();
+        
+        // Register with UpdateManager
+        UpdateManager.Instance.Register(this);
     }
     
-    void Update()
+    void OnDisable()
+    {
+        // Unregister from UpdateManager
+        UpdateManager.Instance?.Unregister(this);
+    }
+    
+    public void ObservedUpdate()
     {
         if (player == null) return;
         
         // If object is far behind player, return to pool
         if (transform.position.z < player.position.z - despawnDistance)
         {
-            ObjectPool pool = FindObjectOfType<ObjectPool>();
-            if (pool != null)
-            {
-                pool.ReturnToPool(poolTag, gameObject);
-            }
-            else
-            {
-                gameObject.SetActive(false);
-            }
+            poolingService?.Despawn(poolKey, gameObject);
         }
     }
 }
 ```
 
-#### 7.2 Add to Prefabs
+#### 6.2 Add to Prefabs
 Add AutoDespawn component to:
-- Tree prefab
-- Rock prefab
-- HotPickup prefab
+- Tree prefab (set poolKey to "Tree")
+- Rock prefab (set poolKey to "Rock")
+- HotPickup prefab (set poolKey to "HotPickup")
 
 Set despawnDistance to 50 (or adjust based on testing)
 
@@ -648,21 +585,15 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 - [ ] Tagged as "Pickup"
 - [ ] Collection triggers (debug log appears)
 
-### Phase 5: Object Pooling
-- [ ] Objects spawn from pool
-- [ ] Pool doesn't create extra instances unnecessarily
-- [ ] Objects return to pool when far behind
-- [ ] No memory leaks (check Profiler)
-- [ ] Performance is smooth
-
-### Phase 6: Spawning
+### Phase 5: Spawning
 - [ ] Obstacles spawn in lanes
 - [ ] Pickups spawn in lanes
 - [ ] Spacing looks reasonable
 - [ ] Density feels balanced
 - [ ] Objects don't overlap
+- [ ] UnityCoreKit Pooling Service working correctly
 
-### Phase 7: Cleanup
+### Phase 6: Cleanup
 - [ ] Objects despawn when behind player
 - [ ] No infinite accumulation of objects
 - [ ] Scene stays clean in Hierarchy during play
@@ -679,24 +610,24 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 
 **Afternoon (3-4 hours):**
 - ✅ Phase 4: Pickup prefabs created
-- ✅ Phase 5: Object pooling system
+- ✅ Phase 5: Procedural spawner with UnityCoreKit Pooling
 - ✅ Basic testing
 
-**End of Day 1:** Can spawn chunks with obstacles and pickups (even if not fully functional)
+**End of Day 1:** Can spawn chunks with obstacles and pickups using UnityCoreKit services
 
 ### Day 2 (4-6 hours)
 **Morning (2-3 hours):**
-- ✅ Phase 6: Procedural spawning refined
-- ✅ Phase 7: Cleanup & despawning
+- ✅ Phase 6: Cleanup & despawning with Pooling Service
 - ✅ Integration with Person A's player
+- ✅ Polish spawn patterns
 
 **Afternoon (2-3 hours):**
-- ✅ Polish spawn patterns
 - ✅ Balance obstacle/pickup density
 - ✅ Test with increasing speed
+- ✅ Verify UpdateManagers integration
 - ✅ Bug fixes
 
-**End of Day 2:** Fully functional world generation system ready for difficulty scaling
+**End of Day 2:** Fully functional world generation system using UnityCoreKit architecture
 
 ---
 
@@ -727,7 +658,8 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 
 ### Performance Goals:
 - 60 FPS with 50+ obstacles visible
-- Object pooling prevents garbage collection spikes
+- UnityCoreKit Pooling Service prevents garbage collection spikes
+- UpdateManagers reduce Update() overhead
 - Billboards are cheaper than full 3D models
 
 ### If Performance Issues:
@@ -738,9 +670,10 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 5. **Use Billboard Renderer:** Unity's built-in is optimized
 
 ### Memory Management:
-- Pool size should handle peak density (50+ obstacles)
-- Don't destroy/instantiate during gameplay
-- Clear inactive objects on restart
+- UnityCoreKit Pooling Service handles pool sizes automatically
+- UpdateManagers batch update calls efficiently
+- Objects despawn automatically via AutoDespawn script
+- No manual Instantiate/Destroy during gameplay
 
 ---
 
@@ -755,13 +688,13 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 **Solution:** Use `LateUpdate()` for billboard rotation, add null check for camera
 
 **Problem:** Obstacles don't spawn  
-**Solution:** Check ObjectPool is initialized, verify pool tags match spawn calls
+**Solution:** Verify UnityCoreKit Pooling Service is registered, check prefabs are assigned in ProceduralSpawner, ensure pool keys match ("Tree", "Rock", "HotPickup")
 
 **Problem:** Pickups not collected  
 **Solution:** Verify Player has collider, check Tag/Layer settings, ensure Is Trigger enabled
 
 **Problem:** Performance drops over time  
-**Solution:** Check AutoDespawn is working, verify objects return to pool
+**Solution:** Check AutoDespawn poolKey is set correctly, verify objects return to Pooling Service, ensure UpdateManagers are registered properly
 
 **Problem:** Objects spawn in wrong positions  
 **Solution:** Debug.Log spawn positions, check lane array values, verify chunk Z calculation
@@ -796,9 +729,12 @@ void OnDrawGizmos()
 - maxObstaclesPerChunk = 15
 - minPickupsPerChunk = 2
 - maxPickupsPerChunk = 5
+- treePrefab, rockPrefab, hotPickupPrefab (assigned)
 
-// ObjectPool
-- Pool sizes: 50 (obstacles), 20 (pickups)
+// UnityCoreKit Pooling
+- Tree pool: 50 instances
+- Rock pool: 50 instances  
+- HotPickup pool: 20 instances
 ```
 
 ### Prefab Hierarchy:
@@ -859,17 +795,19 @@ HotPickup
 Before marking complete:
 - [ ] All scripts compile without errors
 - [ ] All prefabs saved in correct folders
-- [ ] Object pool configured with all prefab types
+- [ ] UnityCoreKit Pooling Service configured with all prefabs
+- [ ] UpdateManagers properly registered in all scripts
 - [ ] ChunkManager spawns chunks smoothly
 - [ ] Obstacles spawn in lanes and face camera
 - [ ] Pickups spawn and are collectible
-- [ ] Objects despawn behind player
+- [ ] Objects despawn behind player via Pooling Service
 - [ ] No performance issues (60 FPS)
 - [ ] Tags and layers configured
 - [ ] Player reference assigned to ChunkManager
+- [ ] AutoDespawn poolKey set on all prefabs
 - [ ] Code commented and readable
 - [ ] Tested with Player movement (with Person A)
 
 ---
 
-**Good luck! Focus on getting Phase 1-6 working solidly. Phase 7 and polish can come after core functionality is proven. Test frequently as you build each phase.**
+**Good luck! Focus on getting Phase 1-5 working solidly. Phase 6 and polish can come after core functionality is proven. Leveraging UnityCoreKit's UpdateManagers and Pooling Service will save you significant development time and provide better performance. Test frequently as you build each phase.**
