@@ -163,7 +163,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7392d59ee31342ab9d5a036fb6b2b42b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkiLoader
-  prefabEntries: []
+  prefabEntries:
+  - key: TerrainChunk
+    prefab: {fileID: 147837945530276576, guid: 045f051ee04bf4f5984bc66ea65ae9e5, type: 3}
   baseUrl: https://api.example.com
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

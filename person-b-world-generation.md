@@ -34,7 +34,10 @@ Steps:
    - Albedo: White or light gray/blue tint
    - Smoothness: 0.3-0.5 (slightly reflective)
    - Optional: Add snow texture if available
-5. Apply material to plane
+5. Apply material to plane:
+   - **Method 1 (Drag & Drop):** Click and drag the SnowGround material from the Project window onto the plane GameObject in the Scene view or Hierarchy
+   - **Method 2 (Inspector):** Select the plane in the Hierarchy, look at the Inspector panel, find the Mesh Renderer component, expand the Materials section, click the small circle icon next to "Element 0", and select SnowGround from the list
+   - **Method 3 (Direct Assignment):** Select the plane, in the Inspector under Mesh Renderer → Materials, drag the SnowGround material from the Project window into the "Element 0" slot
 6. Save as prefab: Drag to Prefabs/Chunks folder
 
 #### 1.2 Implement ChunkManager.cs
