@@ -1,0 +1,3 @@
+[submodule "UnityCoreKit"]
+	path = UnityCoreKit
+	url = git@github.com:BurnEmDown/UnityCoreKit.git
