@@ -10,10 +10,11 @@
 
 You're responsible for creating the infinite world that the player skis through. This includes:
 1. **Terrain chunks** that spawn ahead and despawn behind
-2. **Obstacle spawning** in lanes (trees, rocks, branches)
-3. **Pickup spawning** (hot drinks, fire icons)
-4. **Billboard system** so sprites always face the camera
-5. **Integration with UnityCoreKit** (UpdateManagers and Pooling Service)
+2. **Moving world system** where chunks and objects move toward the player
+3. **Obstacle spawning** in lanes (trees, rocks, branches)
+4. **Pickup spawning** (hot drinks, fire icons)
+5. **Billboard system** so sprites always face the camera
+6. **Integration with UnityCoreKit** (UpdateManagers and Pooling Service)
 
 ---
 
@@ -129,9 +130,274 @@ public class ChunkManager : MonoBehaviour, IUpdateObserver
 
 ---
 
-### Phase 2: Billboard System (1 hour)
+### Phase 2: World Movement System (1-2 hours)
 
-#### 2.1 Create Billboard Script
+#### 2.1 Create WorldMover Script
+**Assets/Scripts/World/WorldMover.cs**
+
+```csharp
+using UnityEngine;
+using UnityCoreKit.UpdateManagers;
+
+public class WorldMover : MonoBehaviour, IUpdateObserver
+{
+    [Header("Movement Settings")]
+    public float baseSpeed = 10f;          // Base movement speed (modified by DifficultyManager)
+    public float currentSpeed = 10f;       // Current speed (can change during gameplay)
+    
+    void Start()
+    {
+        currentSpeed = baseSpeed;
+        UpdateManager.Instance.Register(this);
+    }
+    
+    void OnDestroy()
+    {
+        UpdateManager.Instance?.Unregister(this);
+    }
+    
+    public void ObservedUpdate()
+    {
+        // Move object forward (toward player in -Z direction)
+        transform.position += Vector3.back * currentSpeed * Time.deltaTime;
+    }
+    
+    public void SetSpeed(float speed)
+    {
+        currentSpeed = speed;
+    }
+}
+```
+
+#### 2.2 Create GameSpeed Manager
+**Assets/Scripts/World/GameSpeedManager.cs**
+
+```csharp
+using UnityEngine;
+
+public class GameSpeedManager : MonoBehaviour
+{
+    public static GameSpeedManager Instance { get; private set; }
+    
+    [Header("Speed Settings")]
+    public float currentSpeed = 10f;
+    
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    
+    public void SetSpeed(float speed)
+    {
+        currentSpeed = speed;
+        
+        // Update all WorldMover objects
+        WorldMover[] movers = FindObjectsOfType<WorldMover>();
+        foreach (WorldMover mover in movers)
+        {
+            mover.SetSpeed(speed);
+        }
+    }
+    
+    public float GetSpeed()
+    {
+        return currentSpeed;
+    }
+}
+```
+
+#### 2.3 Update ChunkManager for Moving World
+**Modify ChunkManager.cs SpawnChunk() method:**
+
+```csharp
+void SpawnChunk()
+{
+    Vector3 spawnPosition = new Vector3(0, 0, nextSpawnZ);
+    GameObject chunk = Instantiate(chunkPrefab, spawnPosition, Quaternion.identity);
+    chunk.name = $"Chunk_{chunkIndex}";
+    chunk.transform.parent = transform;
+    
+    // Add WorldMover component to make chunk move
+    WorldMover mover = chunk.AddComponent<WorldMover>();
+    if (GameSpeedManager.Instance != null)
+    {
+        mover.SetSpeed(GameSpeedManager.Instance.GetSpeed());
+    }
+    
+    activeChunks.Enqueue(chunk);
+    
+    // Notify ProceduralSpawner to populate this chunk
+    ProceduralSpawner spawner = GetComponent<ProceduralSpawner>();
+    if (spawner != null)
+    {
+        spawner.PopulateChunk(nextSpawnZ, chunkLength, chunk.transform);
+    }
+    
+    nextSpawnZ += chunkLength;
+    chunkIndex++;
+}
+```
+
+#### 2.4 Update ProceduralSpawner for Parent Attachment
+**Modify ProceduralSpawner.cs PopulateChunk() signature:**
+
+```csharp
+public void PopulateChunk(float chunkStartZ, float chunkLength, Transform chunkParent)
+{
+    SpawnObstacles(chunkStartZ, chunkLength, chunkParent);
+    SpawnPickups(chunkStartZ, chunkLength, chunkParent);
+}
+
+void SpawnObstacles(float chunkStartZ, float chunkLength, Transform chunkParent)
+{
+    int obstacleCount = Mathf.RoundToInt(
+        Random.Range(minObstaclesPerChunk, maxObstaclesPerChunk) * obstacleDensity
+    );
+    
+    for (int i = 0; i < obstacleCount; i++)
+    {
+        float x = lanes[Random.Range(0, lanes.Length)];
+        float z = chunkStartZ + Random.Range(10f, chunkLength - 10f);
+        Vector3 position = new Vector3(x, obstacleHeight, z);
+        
+        string obstacleType = Random.value > 0.5f ? "Tree" : "Rock";
+        GameObject obstacle = poolingService.Spawn(obstacleType, position, Quaternion.identity);
+        
+        if (obstacle != null)
+        {
+            // Parent to chunk so it moves with the chunk
+            obstacle.transform.SetParent(chunkParent);
+            obstacle.transform.rotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+        }
+    }
+}
+
+void SpawnPickups(float chunkStartZ, float chunkLength, Transform chunkParent)
+{
+    int pickupCount = Random.Range(minPickupsPerChunk, maxPickupsPerChunk);
+    
+    for (int i = 0; i < pickupCount; i++)
+    {
+        float x = lanes[Random.Range(0, lanes.Length)];
+        float z = chunkStartZ + Random.Range(10f, chunkLength - 10f);
+        Vector3 position = new Vector3(x, pickupHeight, z);
+        
+        GameObject pickup = poolingService.Spawn("HotPickup", position, Quaternion.identity);
+        
+        if (pickup != null)
+        {
+            // Parent to chunk so it moves with the chunk
+            pickup.transform.SetParent(chunkParent);
+        }
+    }
+}
+```
+
+#### 2.5 Update DespawnZone for Stationary Position
+**Modify DespawnZone.cs to be stationary:**
+
+```csharp
+using UnityEngine;
+using UnityCoreKit.Services;
+
+public class DespawnZone : MonoBehaviour
+{
+    [Header("Zone Settings")]
+    public Vector3 triggerSize = new Vector3(20f, 10f, 5f);
+    
+    private IPoolingService poolingService;
+    private BoxCollider triggerCollider;
+    
+    void Start()
+    {
+        poolingService = ServiceLocator.Instance.Get<IPoolingService>();
+        
+        triggerCollider = gameObject.AddComponent<BoxCollider>();
+        triggerCollider.isTrigger = true;
+        triggerCollider.size = triggerSize;
+    }
+    
+    void OnTriggerEnter(Collider other)
+    {
+        // Despawn chunks when they pass through
+        if (other.CompareTag("Chunk"))
+        {
+            // Notify ChunkManager to spawn new chunk
+            ChunkManager chunkManager = FindObjectOfType<ChunkManager>();
+            if (chunkManager != null)
+            {
+                chunkManager.OnChunkPassedDespawnZone();
+            }
+            
+            Destroy(other.gameObject);
+        }
+        // Despawn obstacles
+        else if (other.CompareTag("Obstacle"))
+        {
+            string poolKey = DeterminePoolKey(other.gameObject);
+            if (!string.IsNullOrEmpty(poolKey))
+            {
+                // Unparent before returning to pool
+                other.transform.SetParent(null);
+                poolingService?.Despawn(poolKey, other.gameObject);
+            }
+        }
+        // Despawn pickups
+        else if (other.CompareTag("Pickup"))
+        {
+            other.transform.SetParent(null);
+            poolingService?.Despawn("HotPickup", other.gameObject);
+        }
+    }
+    
+    private string DeterminePoolKey(GameObject obj)
+    {
+        if (obj.name.Contains("Tree")) return "Tree";
+        if (obj.name.Contains("Rock")) return "Rock";
+        return null;
+    }
+}
+```
+
+#### 2.6 Update ChunkManager for Despawn Zone Callback
+**Add to ChunkManager.cs:**
+
+```csharp
+public void OnChunkPassedDespawnZone()
+{
+    // Dequeue the old chunk (already destroyed by DespawnZone)
+    if (activeChunks.Count > 0)
+    {
+        activeChunks.Dequeue();
+    }
+    
+    // Spawn a new chunk to maintain activeChunkCount
+    SpawnChunk();
+}
+```
+
+#### 2.7 Setup in Unity
+1. Create empty GameObject: "GameSpeedManager"
+2. Add GameSpeedManager component
+3. Set Current Speed: 10
+4. Position DespawnZone at (0, 0, -50) - behind where player will be
+5. Add "Chunk" tag to Tags list
+6. Apply "Chunk" tag to TerrainChunk prefab
+
+**Test:** Run scene, verify chunks move toward player and despawn/respawn correctly
+
+---
+
+### Phase 3: Billboard System (1 hour)
+
+#### 3.1 Create Billboard Script
 **Assets/Scripts/World/Billboard.cs**
 
 ```csharp
@@ -174,9 +440,9 @@ public class Billboard : MonoBehaviour, ILateUpdateObserver
 
 ---
 
-### Phase 3: Create Obstacle Prefabs (2 hours)
+### Phase 4: Create Obstacle Prefabs (2 hours)
 
-#### 3.1 Create Placeholder Sprites (if needed)
+#### 4.1 Create Placeholder Sprites (if needed)
 If you don't have sprite assets yet:
 
 **Option 1: Find Free Assets**
@@ -199,7 +465,7 @@ If you don't have sprite assets yet:
 4. Filter Mode: Bilinear
 5. Click Apply
 
-#### 3.2 Create Obstacle Material
+#### 4.2 Create Obstacle Material
 **Assets/Materials/ObstacleSprites.mat**
 
 1. Right-click in Materials folder → Create → Material
@@ -210,7 +476,7 @@ If you don't have sprite assets yet:
 6. Assign sprite texture to Base Map
 7. Color: White (full brightness)
 
-#### 3.3 Build Obstacle Prefabs
+#### 4.3 Build Obstacle Prefabs
 
 **Tree Prefab (Assets/Prefabs/Obstacles/Tree.prefab):**
 1. Create empty GameObject: "Tree"
@@ -237,12 +503,13 @@ If you don't have sprite assets yet:
 - Smaller size, narrower collider
 - Can be variation of tree with different sprite
 
-#### 3.4 Set Up Tags & Layers
+#### 4.4 Set Up Tags & Layers
 **Edit → Project Settings → Tags and Layers**
 
 **Tags:**
 - Add "Obstacle"
 - Add "Pickup"
+- Add "Chunk"
 
 **Layers:**
 - Layer 8: "Obstacle"
@@ -255,16 +522,16 @@ If you don't have sprite assets yet:
 
 ---
 
-### Phase 4: Create Pickup Prefabs (1.5 hours)
+### Phase 5: Create Pickup Prefabs (1.5 hours)
 
-#### 4.1 Create Pickup Sprite
+#### 5.1 Create Pickup Sprite
 Similar to obstacles, create or find:
 - hot_drink.png (coffee mug, steaming cup)
 - fire_icon.png (flame symbol)
 
 Make them bright/warm colors (orange, yellow, red)
 
-#### 4.2 Create Emissive Pickup Material
+#### 5.2 Create Emissive Pickup Material
 **Assets/Materials/PickupGlow.mat**
 
 1. Create new Material: "PickupGlow"
@@ -278,7 +545,7 @@ Make them bright/warm colors (orange, yellow, red)
    - Assign same texture to Emission Map
 6. This will make pickups glow when Bloom is enabled
 
-#### 4.3 Build Pickup Prefab
+#### 5.3 Build Pickup Prefab
 **Assets/Prefabs/Pickups/HotPickup.prefab**
 
 1. Create GameObject: "HotPickup"
@@ -300,7 +567,7 @@ Make them bright/warm colors (orange, yellow, red)
    - Renderer: Material with additive blend
 8. Save as prefab
 
-#### 4.4 Create Pickup.cs Script
+#### 5.4 Create Pickup.cs Script
 **Assets/Scripts/Pickups/Pickup.cs**
 
 ```csharp
@@ -350,9 +617,9 @@ public class Pickup : MonoBehaviour
 
 ---
 
-### Phase 5: Procedural Spawner (3-4 hours)
+### Phase 6: Procedural Spawner (3-4 hours)
 
-#### 5.1 Implement ProceduralSpawner.cs
+#### 6.1 Implement ProceduralSpawner.cs
 **Assets/Scripts/World/ProceduralSpawner.cs**
 
 ```csharp
@@ -453,7 +720,7 @@ public class ProceduralSpawner : MonoBehaviour
 }
 ```
 
-#### 5.2 Connect to ChunkManager
+#### 6.2 Connect to ChunkManager
 1. Select WorldManager GameObject
 2. Add ProceduralSpawner component
 3. Configure settings in inspector:
@@ -465,112 +732,7 @@ public class ProceduralSpawner : MonoBehaviour
 
 ---
 
-### Phase 6: Cleanup & Recycling (1 hour)
-
-#### 6.1 Create Despawn Trigger Zone
-**Assets/Scripts/World/DespawnZone.cs**
-
-```csharp
-using UnityEngine;
-using UnityCoreKit.UpdateManagers;
-using UnityCoreKit.Services;
-
-public class DespawnZone : MonoBehaviour, IUpdateObserver
-{
-    [Header("Zone Settings")]
-    public float distanceBehindPlayer = 50f;  // How far behind player to position the zone
-    public Vector3 triggerSize = new Vector3(20f, 10f, 5f);  // Size of the trigger zone
-    
-    private Transform player;
-    private IPoolingService poolingService;
-    private BoxCollider triggerCollider;
-    
-    void Start()
-    {
-        // Find player (Person A will create this)
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            player = playerObj.transform;
-        }
-        
-        // Get pooling service
-        poolingService = ServiceLocator.Instance.Get<IPoolingService>();
-        
-        // Set up trigger collider
-        triggerCollider = gameObject.AddComponent<BoxCollider>();
-        triggerCollider.isTrigger = true;
-        triggerCollider.size = triggerSize;
-        
-        // Register with UpdateManager
-        UpdateManager.Instance.Register(this);
-    }
-    
-    void OnDestroy()
-    {
-        // Unregister from UpdateManager
-        UpdateManager.Instance?.Unregister(this);
-    }
-    
-    public void ObservedUpdate()
-    {
-        if (player == null) return;
-        
-        // Keep the despawn zone behind the player
-        Vector3 targetPosition = new Vector3(
-            0f,  // Center on X-axis (covers all lanes)
-            player.position.y,
-            player.position.z - distanceBehindPlayer
-        );
-        
-        transform.position = targetPosition;
-    }
-    
-    void OnTriggerEnter(Collider other)
-    {
-        // Check if the object is an obstacle or pickup that should be despawned
-        if (other.CompareTag("Obstacle"))
-        {
-            // Determine pool key based on object name or component
-            string poolKey = DeterminePoolKey(other.gameObject);
-            if (!string.IsNullOrEmpty(poolKey))
-            {
-                poolingService?.Despawn(poolKey, other.gameObject);
-            }
-        }
-        else if (other.CompareTag("Pickup"))
-        {
-            // Return pickup to pool
-            poolingService?.Despawn("HotPickup", other.gameObject);
-        }
-    }
-    
-    private string DeterminePoolKey(GameObject obj)
-    {
-        // Check object name or components to determine which pool it belongs to
-        if (obj.name.Contains("Tree")) return "Tree";
-        if (obj.name.Contains("Rock")) return "Rock";
-        
-        // Fallback: check for specific components
-        // You can add custom logic here based on your prefab structure
-        return null;
-    }
-}
-```
-
-#### 6.2 Set Up Despawn Zone in Scene
-**Create the Despawn Zone GameObject:**
-
-1. Create empty GameObject: "DespawnZone"
-2. Add DespawnZone component
-3. Configure in Inspector:
-   - Distance Behind Player: 50
-   - Trigger Size: (20, 10, 5)
-4. Ensure all obstacle/pickup prefabs have proper tags:
-   - Tree prefab: Tag = "Obstacle"
-   - Rock prefab: Tag = "Obstacle"
-   - HotPickup prefab: Tag = "Pickup"
-5. Test: Objects should automatically return to pool when they pass through the zone
+**Note:** Phase 7 (Cleanup & Recycling) has been integrated into Phase 2 (World Movement System). The DespawnZone is now stationary and chunks/objects move through it.
 
 ---
 
@@ -611,26 +773,34 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 - [ ] No gaps between chunks
 - [ ] No overlapping chunks
 
-### Phase 2: Billboards
+### Phase 2: World Movement
+- [ ] Chunks move toward player smoothly
+- [ ] GameSpeedManager controls speed globally
+- [ ] Obstacles and pickups move with their parent chunk
+- [ ] Chunks despawn when passing through DespawnZone
+- [ ] New chunks spawn when old ones despawn
+- [ ] DespawnZone positioned correctly behind player
+
+### Phase 3: Billboards
 - [ ] Sprites always face camera
 - [ ] No flickering or rotation jitter
 - [ ] Works when looking from different angles
 
-### Phase 3: Obstacles
+### Phase 4: Obstacles
 - [ ] Tree prefab renders correctly
 - [ ] Rock prefab renders correctly
 - [ ] Colliders are proper size
 - [ ] Tagged as "Obstacle"
 - [ ] Billboard script works on prefabs
 
-### Phase 4: Pickups
+### Phase 5: Pickups
 - [ ] Pickup sprite visible and glowing
 - [ ] Collider larger than visual for easy collection
 - [ ] Pickup.cs script attached
 - [ ] Tagged as "Pickup"
 - [ ] Collection triggers (debug log appears)
 
-### Phase 5: Spawning
+### Phase 6: Spawning
 - [ ] Obstacles spawn in lanes
 - [ ] Pickups spawn in lanes
 - [ ] Spacing looks reasonable
@@ -638,11 +808,7 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 - [ ] Objects don't overlap
 - [ ] UnityCoreKit Pooling Service working correctly
 
-### Phase 6: Cleanup
-- [ ] DespawnZone follows player correctly
-- [ ] Objects despawn when entering the zone
-- [ ] No infinite accumulation of objects
-- [ ] Scene stays clean in Hierarchy during play
+
 
 ---
 
@@ -655,21 +821,21 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 - ✅ Phase 3: Obstacle prefabs created
 
 **Afternoon (3-4 hours):**
-- ✅ Phase 4: Pickup prefabs created
-- ✅ Phase 5: Procedural spawner with UnityCoreKit Pooling
+- ✅ Phase 4: Obstacle prefabs created
+- ✅ Phase 5: Pickup prefabs created
 - ✅ Basic testing
 
-**End of Day 1:** Can spawn chunks with obstacles and pickups using UnityCoreKit services
+**End of Day 1:** Can spawn chunks with obstacles and pickups, world movement system working
 
 ### Day 2 (4-6 hours)
 **Morning (2-3 hours):**
-- ✅ Phase 6: Cleanup & despawning with Pooling Service
+- ✅ Phase 6: Procedural spawner with UnityCoreKit Pooling
 - ✅ Integration with Person A's player
 - ✅ Polish spawn patterns
 
 **Afternoon (2-3 hours):**
 - ✅ Balance obstacle/pickup density
-- ✅ Test with increasing speed
+- ✅ Test speed variations with GameSpeedManager
 - ✅ Verify UpdateManagers integration
 - ✅ Bug fixes
 
@@ -846,12 +1012,14 @@ Before marking complete:
 - [ ] ChunkManager spawns chunks smoothly
 - [ ] Obstacles spawn in lanes and face camera
 - [ ] Pickups spawn and are collectible
-- [ ] Objects despawn behind player via Pooling Service
-- [ ] DespawnZone GameObject created and configured
-- [ ] DespawnZone follows player correctly
+- [ ] World movement system working (chunks/objects move forward)
+- [ ] GameSpeedManager created and functional
+- [ ] Objects despawn when passing through DespawnZone
+- [ ] DespawnZone GameObject positioned correctly (stationary)
+- [ ] Chunks respawn when old chunks despawn
 - [ ] No performance issues (60 FPS)
-- [ ] Tags and layers configured
-- [ ] Player reference assigned to ChunkManager
+- [ ] Tags and layers configured (including "Chunk" tag)
+- [ ] TerrainChunk prefab tagged as "Chunk"
 - [ ] Code commented and readable
 - [ ] Tested with Player movement (with Person A)
 
