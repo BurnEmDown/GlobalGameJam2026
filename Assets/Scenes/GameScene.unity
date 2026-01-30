@@ -514,7 +514,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.1725525, g: 0.37545887, b: 0.6981132, a: 1}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -637,6 +637,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
       propertyPath: prewarm
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startColor.minColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startColor.minColor.g
+      value: 0.8717397
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startColor.minColor.r
+      value: 0.740566
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startColor.minMaxState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startSpeed.minMaxState
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7186869083664654669, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
