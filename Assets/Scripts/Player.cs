@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using World;
 
 public class Player : MonoBehaviour
 {
@@ -67,6 +68,12 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        SetSpeed();
+        SetMovement();
+    }
+
+    private void SetSpeed()
+    {
         if (speed < _targetSpeed)
         {
             if (speed < 0.00001f)
@@ -80,6 +87,11 @@ public class Player : MonoBehaviour
             //    speed = 0;
         }
 
+        sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
+    }
+
+    private void SetMovement()
+    {
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.Alpha6))
         {
             _strafeAngle = Mathf.Min(_strafeAngle + strafeSpeed * Time.fixedDeltaTime, maxStrafeAngle);
@@ -96,10 +108,9 @@ public class Player : MonoBehaviour
                 _strafeAngle = 0;
             }
         }
-        sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
     }
 
-    public void EnterPlane(Plane plane, Vector3 moveDir)
+    public void EnterPlane(TerrainChunk plane, Vector3 moveDir)
     {
         float angle = plane.transform.localEulerAngles.x - 90,
             t = Mathf.Clamp(angle / 90f, 0, 1);

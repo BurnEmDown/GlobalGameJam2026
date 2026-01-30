@@ -23,12 +23,11 @@ namespace World
         public int maxPickupsPerChunk = 5;
         public float pickupHeight = 0.5f;       // Slightly above ground
         public GameObject pickupParent;        // Parent object for pickups
-        
-        [Header("Goal Settings")]
-        public int minGoalsPerChunk = 2;
-        public int maxGoalsPerChunk = 5;
-        public float goalHeight = 0.5f;       // Slightly above ground
-        public GameObject goalParent;
+    
+        [Header("Prefab References")]
+        public Obstacle treePrefab;
+        public GameObject rockPrefab;
+        public Pickup hotPickupPrefab;
     
         [Header("Spacing")]
         public float minSpacing = 15f;          // Minimum distance between objects in same lane
@@ -50,34 +49,49 @@ namespace World
             // Register prefabs with the pooling service
             poolingService.InitPool<Obstacle>("Tree", 20);
             poolingService.InitPool<Pickup>("HotPickup", 20);
-            poolingService.InitPool<Goal>("Goal", 20);
         }
     
-        public void PopulateChunk(float chunkStartZ, float chunkLength)
+        public void PopulateChunk(TerrainChunk chunk)
         {
+            if(chunk.IsPopulated) return;
+            
             // Ensure pooling service is initialized before use
             InitializePoolingService();
             
-            SpawnObstacles(chunkStartZ, chunkLength);
-            SpawnPickups(chunkStartZ, chunkLength);
-            SpawnGoals(chunkStartZ, chunkLength);
+            SpawnObstacles(chunk);
+            SpawnPickups(chunk);
+            
+            chunk.SetPopulated();
         }
-
-        void SpawnObstacles(float chunkStartZ, float chunkLength)
+    
+        // Helper method to calculate Y position based on chunk rotation and terrain height
+        private float CalculateYPosition(float baseHeight, float localZ, float chunkXRotation, float chunkHeight)
         {
+            // Start with the chunk's base height
+            float terrainHeight = chunkHeight;
+            
+            // Convert rotation to radians
+            float rotationRad = chunkXRotation * Mathf.Deg2Rad;
+            
+            // Calculate the vertical offset based on the distance along Z and the rotation
+            // As we move along Z on a tilted surface, the height changes by: distance * sin(angle)
+            float yOffset = localZ * Mathf.Sin(rotationRad);
+            
+            return terrainHeight + baseHeight + -yOffset;
+        }
+    
+        void SpawnObstacles(TerrainChunk chunk)
+        {
+            float chunkStartZ = chunk.planeStart.transform.position.z;
+            float chunkEndZ = chunk.planeEnd.transform.position.z;
+            
             int obstacleCount = Mathf.RoundToInt(
                 Random.Range(minObstaclesPerChunk, maxObstaclesPerChunk) * obstacleDensity
             );
         
             for (int i = 0; i < obstacleCount; i++)
             {
-                // Random lane
-                float x = lanes[Random.Range(0, lanes.Length)];
-            
-                // Random Z position within chunk (leave margins)
-                float z = chunkStartZ + Random.Range(10f, chunkLength - 10f);
-            
-                Vector3 position = new Vector3(x, obstacleHeight, z);
+                var position = CalculatePosition(chunk, chunkStartZ, chunkEndZ);
             
                 // Random obstacle type
                 //string obstacleType = Random.value > 0.5f ? "Tree" : "Rock";
@@ -89,59 +103,50 @@ namespace World
                     if (obstacle != null)
                     {
                         obstacle.transform.position = position;
+                        chunk.AddObjectAsChild(obstacle.gameObject);
                         obstacle.gameObject.SetActive(true);
-                        WorldMover.Instance.RegisterObject(obstacle.transform);
-                        obstacle.SetLookAt(mainCamera.transform);
                     }
                 });
             }
         }
     
-        void SpawnPickups(float chunkStartZ, float chunkLength)
+        void SpawnPickups(TerrainChunk chunk)
         {
+            float chunkStartZ = chunk.planeStart.transform.position.z;
+            float chunkEndZ = chunk.planeEnd.transform.position.z;
+            
             int pickupCount = Random.Range(minPickupsPerChunk, maxPickupsPerChunk);
         
             for (int i = 0; i < pickupCount; i++)
             {
-                // Random lane
-                float x = lanes[Random.Range(0, lanes.Length)];
-            
-                // Random Z position within chunk
-                float z = chunkStartZ + Random.Range(10f, chunkLength - 10f);
-            
-                Vector3 position = new Vector3(x, pickupHeight, z);
-            
+                var position = CalculatePosition(chunk, chunkStartZ, chunkEndZ);
+
                 // Spawn from pooling service
                 poolingService.GetFromPool<Pickup>("HotPickup", pickupParent, (Pickup pickup) =>
                 {
                     pickup.transform.position = position;
-                    WorldMover.Instance.RegisterObject(pickup.transform);
-                    pickup.SetLookAt(mainCamera.transform);
+                    chunk.AddObjectAsChild(pickup.gameObject);
+                    pickup.gameObject.SetActive(true);
                 });
             }
         }
-        
-        private void SpawnGoals(float chunkStartZ, float chunkLength)
+
+        private Vector3 CalculatePosition(TerrainChunk chunk, float chunkStartZ, float chunkEndZ)
         {
-            int goalCount = Random.Range(minGoalsPerChunk, maxGoalsPerChunk);
-        
-            for (int i = 0; i < goalCount; i++)
-            {
-                // Random lane
-                float x = lanes[Random.Range(0, lanes.Length)];
-            
-                // Random Z position within chunk
-                float z = chunkStartZ + Random.Range(10f, chunkLength - 10f);
-            
-                Vector3 position = new Vector3(x, goalHeight, z);
-            
-                // Spawn from pooling service
-                poolingService.GetFromPool<Goal>("Goal", goalParent, (Goal goal) =>
-                {
-                    goal.transform.position = position;
-                    WorldMover.Instance.RegisterObject(goal.transform);
-                });
-            }
+            // Random lane
+            float x = lanes[Random.Range(0, lanes.Length)];
+
+            // Random Z position within chunk
+            float z = Random.Range(chunkStartZ, chunkEndZ);
+
+            // Calculate local Z position within the chunk
+            float localZ = z - chunkStartZ;
+
+            // Calculate correct Y position based on chunk rotation and terrain height
+            float y = CalculateYPosition(obstacleHeight, localZ, chunk.transform.rotation.x, chunk.transform.position.y);
+
+            Vector3 position = new Vector3(x, y, z);
+            return position;
         }
     }
 }

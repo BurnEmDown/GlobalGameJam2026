@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkiLoader
   prefabEntries:
   - key: TerrainChunk
-    prefab: {fileID: 147837945530276576, guid: 045f051ee04bf4f5984bc66ea65ae9e5, type: 3}
+    prefab: {fileID: 1172931738585655600, guid: 4408b7bae3a958d489d99ff22c57ca1c, type: 3}
   - key: Tree
     prefab: {fileID: 2745256087835639086, guid: 3766db8eea18a45b1b79af4f94d6d2be, type: 3}
   - key: HotPickup
