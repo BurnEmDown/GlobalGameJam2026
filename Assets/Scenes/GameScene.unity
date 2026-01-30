@@ -153,6 +153,7 @@ MonoBehaviour:
   chunkLength: 100
   activeChunkCount: 4
   spawnDistance: 200
+  chunkXRotation: 0
   player: {fileID: 0}
 --- !u!4 &1456861168
 Transform:
@@ -306,6 +307,69 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &1775932626
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1775932628}
+  - component: {fileID: 1775932627}
+  m_Layer: 0
+  m_Name: ProceduralSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1775932627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775932626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cafd92e4abd24ad0b001b5ec29faef64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::World.ProceduralSpawner
+  lanes:
+  - -2
+  - -1
+  - 0
+  - 1
+  - 2
+  minObstaclesPerChunk: 5
+  maxObstaclesPerChunk: 15
+  obstacleDensity: 1
+  obstacleHeight: 0
+  obstacleParent: {fileID: 0}
+  minPickupsPerChunk: 2
+  maxPickupsPerChunk: 5
+  pickupHeight: 0.5
+  pickupParent: {fileID: 0}
+  treePrefab: {fileID: 0}
+  rockPrefab: {fileID: 0}
+  hotPickupPrefab: {fileID: 0}
+  minSpacing: 15
+--- !u!4 &1775932628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775932626}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2037870866
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,3 +408,4 @@ SceneRoots:
   - {fileID: 1747834220}
   - {fileID: 1456861168}
   - {fileID: 2037870867}
+  - {fileID: 1775932628}
