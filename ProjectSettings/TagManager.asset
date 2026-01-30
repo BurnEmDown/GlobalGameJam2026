@@ -7,6 +7,7 @@ TagManager:
   - Obstacle
   - Pickup
   - Terrain
+  - Goal
   layers:
   - Default
   - TransparentFX
