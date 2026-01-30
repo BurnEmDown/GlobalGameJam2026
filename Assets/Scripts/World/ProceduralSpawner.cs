@@ -23,9 +23,9 @@ namespace World
         public GameObject pickupParent;        // Parent object for pickups
     
         [Header("Prefab References")]
-        public GameObject treePrefab;
+        public Obstacle treePrefab;
         public GameObject rockPrefab;
-        public GameObject hotPickupPrefab;
+        public Pickup hotPickupPrefab;
     
         [Header("Spacing")]
         public float minSpacing = 15f;          // Minimum distance between objects in same lane
@@ -34,18 +34,26 @@ namespace World
     
         void Start()
         {
+            InitializePoolingService();
+        }
+        
+        private void InitializePoolingService()
+        {
+            if (poolingService != null) return; // Already initialized
+    
             // Get the Pooling Service from UnityCoreKit
             poolingService = CoreServices.Get<IPoolManager>();
-        
-            // TODO: register the prefabs correctly
+
             // Register prefabs with the pooling service
-            //poolingService.InitPool<>("Tree", treePrefab, 50);
-            //poolingService.InitPool<>("Rock", rockPrefab, 50);
+            poolingService.InitPool<Obstacle>("Tree", 20);
             poolingService.InitPool<Pickup>("HotPickup", 20);
         }
     
         public void PopulateChunk(float chunkStartZ, float chunkLength)
         {
+            // Ensure pooling service is initialized before use
+            InitializePoolingService();
+            
             SpawnObstacles(chunkStartZ, chunkLength);
             SpawnPickups(chunkStartZ, chunkLength);
         }
@@ -67,18 +75,18 @@ namespace World
                 Vector3 position = new Vector3(x, obstacleHeight, z);
             
                 // Random obstacle type
-                string obstacleType = Random.value > 0.5f ? "Tree" : "Rock";
+                //string obstacleType = Random.value > 0.5f ? "Tree" : "Rock";
             
                 // Spawn from pooling service
                 // TODO: fix getting obstacle from pool
-                // poolingService.GetFromPool<GameObject>(obstacleType, obstacleParent, (GameObject obstacle) =>
-                // {
-                //     if (obstacle != null)
-                //     {
-                //         obstacle.transform.position = position;
-                //         obstacle.SetActive(true);
-                //     }
-                // });
+                poolingService.GetFromPool<Obstacle>("Tree", obstacleParent, (Obstacle obstacle) =>
+                {
+                    if (obstacle != null)
+                    {
+                        obstacle.transform.position = position;
+                        obstacle.gameObject.SetActive(true);
+                    }
+                });
             }
         }
     

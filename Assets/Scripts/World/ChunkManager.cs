@@ -19,6 +19,7 @@ namespace World
     
         [Header("References")]
         public Transform player;               // Assign Player in inspector
+        public ProceduralSpawner proceduralSpawner; // Reference to ProceduralSpawner
     
         private Queue<TerrainChunk> activeChunks = new Queue<TerrainChunk>();
         private float nextSpawnZ = 0f;
@@ -61,7 +62,6 @@ namespace World
     
         void SpawnChunk()
         {
-            
             poolingService.GetFromPool<TerrainChunk>("TerrainChunk", terrainChunkParent, (TerrainChunk chunk) =>
             {
                 if (chunk != null)
@@ -86,12 +86,10 @@ namespace World
                     activeChunks.Enqueue(chunk);
             
                     // Notify ProceduralSpawner to populate this chunk
-                    // TODO: uncomment after implementing ProceduralSpawner
-                    // ProceduralSpawner spawner = GetComponent<ProceduralSpawner>();
-                    // if (spawner != null)
-                    // {
-                    //     spawner.PopulateChunk(nextSpawnZ, chunkLength);
-                    // }
+                    if (proceduralSpawner != null)
+                    {
+                        proceduralSpawner.PopulateChunk(nextSpawnZ, chunkLength);
+                    }
             
                     Debug.Log("Spawned Chunk at Z: " + nextSpawnZ);
                     nextSpawnZ += chunkLength;
