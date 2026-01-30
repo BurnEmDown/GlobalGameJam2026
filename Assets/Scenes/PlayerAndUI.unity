@@ -14,8 +14,8 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 1, g: 1, b: 1, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.01
   m_LinearFogStart: 0
@@ -119,6 +119,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &19335014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 19335016}
+  - component: {fileID: 19335015}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &19335015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19335014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 7e3a5be79c6a2ff4da747afa7a2efed6, type: 2}
+--- !u!4 &19335016
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19335014}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &146065119
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -579,7 +628,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.1725525, g: 0.37545887, b: 0.6981132, a: 1}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1101,15 +1150,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   sphere: {fileID: 308336771}
   cam: {fileID: 960021663}
-  minSpeed: 0.1
+  minSpeed: 0.15
   maxSpeed: 1
   rotationSpeed: 1
   maxStrafeAngle: 25
-  strafeSpeed: 10
-  minAngleX: -30
-  maxAngleX: 30
-  minAngleY: -30
-  maxAngleY: 80
+  strafeSpeed: 20
+  minAngleX: -60
+  maxAngleX: 60
+  minAngleY: -60
+  maxAngleY: 85
   mouseSensitivity: 100
 --- !u!1001 &1759571943
 PrefabInstance:
@@ -1119,12 +1168,44 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1618027526}
     m_Modifications:
+    - target: {fileID: 664571205033244085, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1593626270783642849, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
       propertyPath: m_Name
       value: FrostParticles
       objectReference: {fileID: 0}
     - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
       propertyPath: prewarm
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startColor.minColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startColor.minColor.g
+      value: 0.85882354
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startColor.minColor.r
+      value: 0.6862745
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startColor.minMaxState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981344733767507426, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      propertyPath: InitialModule.startSpeed.minMaxState
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7186869083664654669, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
@@ -1170,7 +1251,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1593626270783642849, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2109413161}
   m_SourcePrefab: {fileID: 100100000, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
 --- !u!1 &1840134676
 GameObject:
@@ -1309,6 +1393,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8033160242733396548, guid: 1f39c5cd56be968468a4e6c51f55a481, type: 3}
   m_PrefabInstance: {fileID: 146065119}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2109413157 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1593626270783642849, guid: f8d22f2e05dc32745b67a1a96c564629, type: 3}
+  m_PrefabInstance: {fileID: 1759571943}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2109413161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109413157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5b70842e2ec18948a26972c1d5bc7be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClearParticles
+  clear: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1317,3 +1419,4 @@ SceneRoots:
   - {fileID: 1840134678}
   - {fileID: 865990827}
   - {fileID: 1097798418}
+  - {fileID: 19335016}
