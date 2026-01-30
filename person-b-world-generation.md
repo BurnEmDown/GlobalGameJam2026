@@ -736,6 +736,268 @@ public class ProceduralSpawner : MonoBehaviour
 
 ---
 
+### Phase 7: Goal Arch System (2-3 hours)
+
+#### 7.1 Create Goal Arch Prefab
+**Assets/Prefabs/Goals/GoalArch.prefab**
+
+The goal arch is a structure the player skis through to score points. Since the player stays stationary and the world moves toward them, the arch will move through the moving world system.
+
+**Steps:**
+1. Create empty GameObject: "GoalArch"
+2. Create visual structure:
+   - **Left Post:** Create Cube, scale (0.5, 5, 0.5), position (-3, 2.5, 0)
+   - **Right Post:** Create Cube, scale (0.5, 5, 0.5), position (3, 2.5, 0)
+   - **Top Bar:** Create Cube, scale (7, 0.5, 0.5), position (0, 5, 0)
+3. Create a bright material:
+   - Material name: "GoalArchMaterial"
+   - Shader: Universal Render Pipeline/Lit
+   - Albedo: Bright color (gold, yellow, or cyan)
+   - Enable Emission: Set emission color to same bright color (HDR, intensity ~2-3)
+   - Apply to all three parts
+4. Add trigger collider to parent:
+   - Add Box Collider component to "GoalArch"
+   - Is Trigger: ✓
+   - Size: (6.5, 5, 2) - Wide enough to cover the arch area
+   - Center: (0, 2.5, 0)
+   - Tag: "Goal"
+5. Optional: Add particle effects on posts for visual appeal
+6. Save as prefab
+
+#### 7.2 Create Goal.cs Script
+**Assets/Scripts/Goals/Goal.cs**
+
+```csharp
+using UnityEngine;
+
+namespace Goals
+{
+    public class Goal : MonoBehaviour
+    {
+        [Header("Goal Settings")]
+        public int pointsAwarded = 100;
+        public bool hasBeenCleared = false;
+        
+        [Header("Effects")]
+        public GameObject clearEffect;         // Particle prefab when cleared
+        public AudioClip clearSound;           // Sound when player passes through
+        
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Player") && !hasBeenCleared)
+            {
+                ClearGoal();
+            }
+        }
+        
+        void ClearGoal()
+        {
+            hasBeenCleared = true;
+            
+            // Award points (Person D will implement ScoreManager)
+            // ScoreManager.Instance?.AddScore(pointsAwarded);
+            
+            // For now, use debug log
+            Debug.Log($"Goal cleared! +{pointsAwarded} points");
+            
+            // Spawn particle effect
+            if (clearEffect != null)
+            {
+                Instantiate(clearEffect, transform.position, Quaternion.identity);
+            }
+            
+            // Play sound
+            if (clearSound != null)
+            {
+                AudioSource.PlayClipAtPoint(clearSound, transform.position);
+            }
+            
+            // Optional: Change visual appearance to show it's cleared
+            ChangeAppearanceToCleared();
+        }
+        
+        void ChangeAppearanceToCleared()
+        {
+            // Change color to indicate cleared state (e.g., fade or change to green)
+            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+            foreach (Renderer rend in renderers)
+            {
+                Color clearedColor = Color.green;
+                clearedColor.a = 0.5f;
+                rend.material.color = clearedColor;
+            }
+        }
+        
+        // Called when object is returned to pool or re-spawned
+        void OnEnable()
+        {
+            hasBeenCleared = false;
+        }
+    }
+}
+```
+
+#### 7.3 Create GoalSpawner Script
+**Assets/Scripts/Goals/GoalSpawner.cs**
+
+```csharp
+using UnityEngine;
+using UnityCoreKit.Runtime.Core.Interfaces;
+using UnityCoreKit.Runtime.Core.Services;
+
+namespace Goals
+{
+    public class GoalSpawner : MonoBehaviour
+    {
+        [Header("Goal Settings")]
+        public GameObject goalArchPrefab;
+        public float spawnInterval = 300f;        // Distance between goals (every 3 chunks if chunks are 100 units)
+        public float nextGoalSpawnZ = 500f;       // Z position for next goal spawn
+        public float goalHeight = 0f;             // Y position (ground level)
+        
+        private IPoolManager poolingService;
+        private Transform worldMoverTransform;
+        
+        void Start()
+        {
+            poolingService = CoreServices.Get<IPoolManager>();
+            
+            // Register goal prefab with pooling service
+            poolingService.InitPool<Goal>("GoalArch", 5);
+            
+            // Find WorldMover to register spawned goals
+            worldMoverTransform = FindObjectOfType<WorldMover>()?.transform;
+        }
+        
+        public void CheckAndSpawnGoal(float playerPositionZ)
+        {
+            // Check if it's time to spawn a goal
+            if (playerPositionZ > nextGoalSpawnZ - 200f) // Spawn when player is 200 units away
+            {
+                SpawnGoal();
+                nextGoalSpawnZ += spawnInterval;
+            }
+        }
+        
+        void SpawnGoal()
+        {
+            Vector3 spawnPosition = new Vector3(0, goalHeight, nextGoalSpawnZ);
+            
+            GameObject goal = poolingService.GetFromPool<Goal>("GoalArch");
+            if (goal != null)
+            {
+                goal.transform.position = spawnPosition;
+                goal.transform.rotation = Quaternion.identity;
+                
+                // Register with WorldMover so it moves toward player
+                if (WorldMover.Instance != null)
+                {
+                    WorldMover.Instance.RegisterObject(goal.transform);
+                }
+                
+                Debug.Log($"Goal spawned at Z: {nextGoalSpawnZ}");
+            }
+        }
+    }
+}
+```
+
+#### 7.4 Integrate GoalSpawner with ChunkManager
+**Modify ChunkManager.cs ObservedUpdate() method:**
+
+```csharp
+public void ObservedUpdate()
+{
+    // Check if we need to spawn a new chunk
+    if (player != null && player.position.z > nextSpawnZ - spawnDistance)
+    {
+        SpawnChunk();
+        DespawnOldChunk();
+    }
+    
+    // Check if we need to spawn a goal
+    GoalSpawner goalSpawner = GetComponent<GoalSpawner>();
+    if (goalSpawner != null && player != null)
+    {
+        goalSpawner.CheckAndSpawnGoal(player.position.z);
+    }
+}
+```
+
+#### 7.5 Update DespawnZone for Goals
+**Add goal handling to DespawnZone.cs OnTriggerEnter():**
+
+```csharp
+void OnTriggerEnter(Collider other)
+{
+    // Despawn chunks when they pass through
+    if (other.CompareTag("Chunk"))
+    {
+        ChunkManager chunkManager = FindObjectOfType<ChunkManager>();
+        if (chunkManager != null)
+        {
+            chunkManager.OnChunkPassedDespawnZone();
+        }
+        Destroy(other.gameObject);
+    }
+    // Despawn goals
+    else if (other.CompareTag("Goal"))
+    {
+        // Unregister from WorldMover
+        if (WorldMover.Instance != null)
+        {
+            WorldMover.Instance.UnregisterObject(other.transform);
+        }
+        
+        // Return to pool
+        poolingService?.ReturnToPool("GoalArch", other.gameObject);
+    }
+    // ... existing obstacle and pickup handling ...
+}
+```
+
+#### 7.6 Setup in Unity
+1. Add "Goal" tag to Tags list (Edit → Project Settings → Tags and Layers)
+2. Apply "Goal" tag to GoalArch prefab
+3. Select WorldManager GameObject
+4. Add GoalSpawner component
+5. Configure GoalSpawner:
+   - Assign GoalArch prefab
+   - Spawn Interval: 300 (every 3 chunks)
+   - Next Goal Spawn Z: 500 (first goal appears ahead)
+6. Test: Run game, goal should spawn ahead and move toward player
+
+**Test Checklist:**
+- [ ] Goal arch renders correctly with bright material
+- [ ] Goal moves toward player with world movement
+- [ ] Player can ski through the arch
+- [ ] Points are logged when passing through (debug log)
+- [ ] Goal visual changes after being cleared
+- [ ] Goal despawns when passing through DespawnZone
+- [ ] New goals spawn at regular intervals
+
+#### 7.7 Integration Notes
+
+**With Person A (Player Controller):**
+- Player GameObject must have Tag = "Player"
+- Player needs a collider (capsule or box) to trigger the goal
+- Player stays stationary on Z-axis, only moves left/right
+
+**With Person D (Score/Game Manager):**
+- Replace `Debug.Log` in Goal.cs with actual score system
+- Integration code:
+```csharp
+// In Goal.cs ClearGoal() method:
+ScoreManager.Instance?.AddScore(pointsAwarded);
+```
+
+**Difficulty Scaling:**
+- Can adjust `spawnInterval` based on difficulty
+- Can increase `pointsAwarded` for goals at higher speeds
+- Could add different goal types (narrow vs wide, moving vs stationary)
+
+---
+
 ## INTEGRATION POINTS
 
 ### With Person A (Player Controller):
@@ -808,6 +1070,17 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 - [ ] Objects don't overlap
 - [ ] UnityCoreKit Pooling Service working correctly
 
+### Phase 7: Goal Arch System
+- [ ] Goal arch prefab created with proper visuals
+- [ ] Goal arch has trigger collider with "Goal" tag
+- [ ] Goal.cs script detects player passing through
+- [ ] Points are logged when clearing goal
+- [ ] Goal visual changes after being cleared
+- [ ] GoalSpawner spawns goals at intervals
+- [ ] Goals register with WorldMover and move toward player
+- [ ] Goals despawn properly through DespawnZone
+- [ ] Integration with ChunkManager working
+
 
 
 ---
@@ -837,9 +1110,17 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 - ✅ Balance obstacle/pickup density
 - ✅ Test speed variations with GameSpeedManager
 - ✅ Verify UpdateManagers integration
+- ✅ Phase 7: Goal arch system (if time permits, can be moved to Day 3)
 - ✅ Bug fixes
 
 **End of Day 2:** Fully functional world generation system using UnityCoreKit architecture
+
+**Optional Day 3 Polish (2-4 hours):**
+- ✅ Complete Phase 7: Goal arch system (if not done Day 2)
+- ✅ Fine-tune goal spawn intervals
+- ✅ Add visual polish to goals (particles, effects)
+- ✅ Test goal scoring integration with Person D's system
+- ✅ Balance points awarded per goal
 
 ---
 
@@ -1017,12 +1298,18 @@ Before marking complete:
 - [ ] Objects despawn when passing through DespawnZone
 - [ ] DespawnZone GameObject positioned correctly (stationary)
 - [ ] Chunks respawn when old chunks despawn
+- [ ] Goal arch system implemented and working
+- [ ] Goals spawn at regular intervals
+- [ ] Goals move with WorldMover system
+- [ ] Player can pass through goals and score points
+- [ ] Goals despawn correctly
+- [ ] "Goal" tag added and applied to GoalArch prefab
 - [ ] No performance issues (60 FPS)
-- [ ] Tags and layers configured (including "Chunk" tag)
+- [ ] Tags and layers configured (including "Chunk" and "Goal" tags)
 - [ ] TerrainChunk prefab tagged as "Chunk"
 - [ ] Code commented and readable
 - [ ] Tested with Player movement (with Person A)
 
 ---
 
-**Good luck! Focus on getting Phase 1-5 working solidly. Phase 6 and polish can come after core functionality is proven. Leveraging UnityCoreKit's UpdateManagers and Pooling Service will save you significant development time and provide better performance. Test frequently as you build each phase.**
+**Good luck! Focus on getting Phase 1-6 working solidly first. Phase 7 (Goal System) can be implemented after the core world generation is proven. Leveraging UnityCoreKit's UpdateManagers and Pooling Service will save you significant development time and provide better performance. Test frequently as you build each phase.**
