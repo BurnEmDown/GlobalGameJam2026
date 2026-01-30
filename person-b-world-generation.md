@@ -34,10 +34,7 @@ Steps:
    - Albedo: White or light gray/blue tint
    - Smoothness: 0.3-0.5 (slightly reflective)
    - Optional: Add snow texture if available
-5. Apply material to plane:
-   - **Method 1 (Drag & Drop):** Click and drag the SnowGround material from the Project window onto the plane GameObject in the Scene view or Hierarchy
-   - **Method 2 (Inspector):** Select the plane in the Hierarchy, look at the Inspector panel, find the Mesh Renderer component, expand the Materials section, click the small circle icon next to "Element 0", and select SnowGround from the list
-   - **Method 3 (Direct Assignment):** Select the plane, in the Inspector under Mesh Renderer → Materials, drag the SnowGround material from the Project window into the "Element 0" slot
+5. Apply material to plane
 6. Save as prefab: Drag to Prefabs/Chunks folder
 
 #### 1.2 Implement ChunkManager.cs
@@ -470,24 +467,25 @@ public class ProceduralSpawner : MonoBehaviour
 
 ### Phase 6: Cleanup & Recycling (1 hour)
 
-#### 6.1 Add Auto-Despawn Script
-**Assets/Scripts/World/AutoDespawn.cs**
+#### 6.1 Create Despawn Trigger Zone
+**Assets/Scripts/World/DespawnZone.cs**
 
 ```csharp
 using UnityEngine;
 using UnityCoreKit.UpdateManagers;
 using UnityCoreKit.Services;
 
-public class AutoDespawn : MonoBehaviour, IUpdateObserver
+public class DespawnZone : MonoBehaviour, IUpdateObserver
 {
-    [Header("Despawn Settings")]
-    public float despawnDistance = 50f;  // Distance behind player to despawn
-    public string poolKey;               // Set this based on prefab type: "Tree", "Rock", "HotPickup"
+    [Header("Zone Settings")]
+    public float distanceBehindPlayer = 50f;  // How far behind player to position the zone
+    public Vector3 triggerSize = new Vector3(20f, 10f, 5f);  // Size of the trigger zone
     
     private Transform player;
     private IPoolingService poolingService;
+    private BoxCollider triggerCollider;
     
-    void OnEnable()
+    void Start()
     {
         // Find player (Person A will create this)
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -499,11 +497,16 @@ public class AutoDespawn : MonoBehaviour, IUpdateObserver
         // Get pooling service
         poolingService = ServiceLocator.Instance.Get<IPoolingService>();
         
+        // Set up trigger collider
+        triggerCollider = gameObject.AddComponent<BoxCollider>();
+        triggerCollider.isTrigger = true;
+        triggerCollider.size = triggerSize;
+        
         // Register with UpdateManager
         UpdateManager.Instance.Register(this);
     }
     
-    void OnDisable()
+    void OnDestroy()
     {
         // Unregister from UpdateManager
         UpdateManager.Instance?.Unregister(this);
@@ -513,22 +516,61 @@ public class AutoDespawn : MonoBehaviour, IUpdateObserver
     {
         if (player == null) return;
         
-        // If object is far behind player, return to pool
-        if (transform.position.z < player.position.z - despawnDistance)
+        // Keep the despawn zone behind the player
+        Vector3 targetPosition = new Vector3(
+            0f,  // Center on X-axis (covers all lanes)
+            player.position.y,
+            player.position.z - distanceBehindPlayer
+        );
+        
+        transform.position = targetPosition;
+    }
+    
+    void OnTriggerEnter(Collider other)
+    {
+        // Check if the object is an obstacle or pickup that should be despawned
+        if (other.CompareTag("Obstacle"))
         {
-            poolingService?.Despawn(poolKey, gameObject);
+            // Determine pool key based on object name or component
+            string poolKey = DeterminePoolKey(other.gameObject);
+            if (!string.IsNullOrEmpty(poolKey))
+            {
+                poolingService?.Despawn(poolKey, other.gameObject);
+            }
         }
+        else if (other.CompareTag("Pickup"))
+        {
+            // Return pickup to pool
+            poolingService?.Despawn("HotPickup", other.gameObject);
+        }
+    }
+    
+    private string DeterminePoolKey(GameObject obj)
+    {
+        // Check object name or components to determine which pool it belongs to
+        if (obj.name.Contains("Tree")) return "Tree";
+        if (obj.name.Contains("Rock")) return "Rock";
+        
+        // Fallback: check for specific components
+        // You can add custom logic here based on your prefab structure
+        return null;
     }
 }
 ```
 
-#### 6.2 Add to Prefabs
-Add AutoDespawn component to:
-- Tree prefab (set poolKey to "Tree")
-- Rock prefab (set poolKey to "Rock")
-- HotPickup prefab (set poolKey to "HotPickup")
+#### 6.2 Set Up Despawn Zone in Scene
+**Create the Despawn Zone GameObject:**
 
-Set despawnDistance to 50 (or adjust based on testing)
+1. Create empty GameObject: "DespawnZone"
+2. Add DespawnZone component
+3. Configure in Inspector:
+   - Distance Behind Player: 50
+   - Trigger Size: (20, 10, 5)
+4. Ensure all obstacle/pickup prefabs have proper tags:
+   - Tree prefab: Tag = "Obstacle"
+   - Rock prefab: Tag = "Obstacle"
+   - HotPickup prefab: Tag = "Pickup"
+5. Test: Objects should automatically return to pool when they pass through the zone
 
 ---
 
@@ -597,7 +639,8 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 - [ ] UnityCoreKit Pooling Service working correctly
 
 ### Phase 6: Cleanup
-- [ ] Objects despawn when behind player
+- [ ] DespawnZone follows player correctly
+- [ ] Objects despawn when entering the zone
 - [ ] No infinite accumulation of objects
 - [ ] Scene stays clean in Hierarchy during play
 
@@ -697,7 +740,7 @@ FrostManager.Instance?.ReduceFrost(frostReduction);
 **Solution:** Verify Player has collider, check Tag/Layer settings, ensure Is Trigger enabled
 
 **Problem:** Performance drops over time  
-**Solution:** Check AutoDespawn poolKey is set correctly, verify objects return to Pooling Service, ensure UpdateManagers are registered properly
+**Solution:** Check DespawnZone is following player, verify trigger collider size is adequate, ensure objects have correct tags ("Obstacle", "Pickup"), verify objects return to Pooling Service
 
 **Problem:** Objects spawn in wrong positions  
 **Solution:** Debug.Log spawn positions, check lane array values, verify chunk Z calculation
@@ -804,10 +847,11 @@ Before marking complete:
 - [ ] Obstacles spawn in lanes and face camera
 - [ ] Pickups spawn and are collectible
 - [ ] Objects despawn behind player via Pooling Service
+- [ ] DespawnZone GameObject created and configured
+- [ ] DespawnZone follows player correctly
 - [ ] No performance issues (60 FPS)
 - [ ] Tags and layers configured
 - [ ] Player reference assigned to ChunkManager
-- [ ] AutoDespawn poolKey set on all prefabs
 - [ ] Code commented and readable
 - [ ] Tested with Player movement (with Person A)
 
