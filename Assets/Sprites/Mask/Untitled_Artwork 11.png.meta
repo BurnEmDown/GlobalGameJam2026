@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 72adc461ac1aed34fa9faebdf4543185
+guid: cf14e847c78af764e831e5a714dc06ff
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7715043416430721854
-    second: SnowFlake_0
+      213: -3726306262918629138
+    second: Untitled_Artwork 11_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -53,7 +53,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SnowFlake_0
+      name: Untitled_Artwork 11_0
       rect:
         serializedVersion: 2
-        x: 116
-        y: 87
-        width: 789
-        height: 874
+        x: 0
+        y: 0
+        width: 1920
+        height: 1080
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2c44ee883e8aee490800000000000000
-      internalID: -7715043416430721854
+      spriteID: ee8fb6a5230894cc0800000000000000
+      internalID: -3726306262918629138
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      SnowFlake_0: -7715043416430721854
+      Untitled_Artwork 11_0: -3726306262918629138
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
