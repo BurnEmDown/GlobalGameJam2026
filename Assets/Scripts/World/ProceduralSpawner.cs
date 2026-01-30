@@ -85,6 +85,7 @@ namespace World
                     {
                         obstacle.transform.position = position;
                         obstacle.gameObject.SetActive(true);
+                        WorldMover.Instance.RegisterObject(obstacle.transform);
                     }
                 });
             }
@@ -108,6 +109,7 @@ namespace World
                 poolingService.GetFromPool<Pickup>("HotPickup", pickupParent, (Pickup pickup) =>
                 {
                     pickup.transform.position = position;
+                    WorldMover.Instance.RegisterObject(pickup.transform);
                 });
             }
         }
