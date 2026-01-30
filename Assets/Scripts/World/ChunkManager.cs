@@ -94,7 +94,7 @@ namespace World
 
             if (proceduralSpawner != null)
             {
-                proceduralSpawner.PopulateChunk(nextSpawnZ, chunkLength);
+                proceduralSpawner.PopulateChunk(nextSpawnZ, chunkLength, chunkXRotation, chunk.transform.position.y);
             }
 
             WorldMover.Instance.RegisterObject(chunk.transform);
