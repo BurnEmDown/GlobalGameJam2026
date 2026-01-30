@@ -23,11 +23,12 @@ namespace World
         public int maxPickupsPerChunk = 5;
         public float pickupHeight = 0.5f;       // Slightly above ground
         public GameObject pickupParent;        // Parent object for pickups
-    
-        [Header("Prefab References")]
-        public Obstacle treePrefab;
-        public GameObject rockPrefab;
-        public Pickup hotPickupPrefab;
+        
+        [Header("Goal Settings")]
+        public int minGoalsPerChunk = 2;
+        public int maxGoalsPerChunk = 5;
+        public float goalHeight = 0.5f;       // Slightly above ground
+        public GameObject goalParent;
     
         [Header("Spacing")]
         public float minSpacing = 15f;          // Minimum distance between objects in same lane
@@ -49,6 +50,7 @@ namespace World
             // Register prefabs with the pooling service
             poolingService.InitPool<Obstacle>("Tree", 20);
             poolingService.InitPool<Pickup>("HotPickup", 20);
+            poolingService.InitPool<Goal>("Goal", 20);
         }
     
         public void PopulateChunk(float chunkStartZ, float chunkLength)
@@ -58,8 +60,9 @@ namespace World
             
             SpawnObstacles(chunkStartZ, chunkLength);
             SpawnPickups(chunkStartZ, chunkLength);
+            SpawnGoals(chunkStartZ, chunkLength);
         }
-    
+
         void SpawnObstacles(float chunkStartZ, float chunkLength)
         {
             int obstacleCount = Mathf.RoundToInt(
@@ -114,6 +117,29 @@ namespace World
                     pickup.transform.position = position;
                     WorldMover.Instance.RegisterObject(pickup.transform);
                     pickup.SetLookAt(mainCamera.transform);
+                });
+            }
+        }
+        
+        private void SpawnGoals(float chunkStartZ, float chunkLength)
+        {
+            int goalCount = Random.Range(minGoalsPerChunk, maxGoalsPerChunk);
+        
+            for (int i = 0; i < goalCount; i++)
+            {
+                // Random lane
+                float x = lanes[Random.Range(0, lanes.Length)];
+            
+                // Random Z position within chunk
+                float z = chunkStartZ + Random.Range(10f, chunkLength - 10f);
+            
+                Vector3 position = new Vector3(x, goalHeight, z);
+            
+                // Spawn from pooling service
+                poolingService.GetFromPool<Goal>("Goal", goalParent, (Goal goal) =>
+                {
+                    goal.transform.position = position;
+                    WorldMover.Instance.RegisterObject(goal.transform);
                 });
             }
         }
