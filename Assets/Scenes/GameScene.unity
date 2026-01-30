@@ -418,7 +418,7 @@ Transform:
   m_GameObject: {fileID: 1747834217}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2164396, y: 0, z: 0, w: 0.97629607}
-  m_LocalPosition: {x: 0, y: 3, z: 2}
+  m_LocalPosition: {x: 0, y: 6, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -497,22 +497,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cafd92e4abd24ad0b001b5ec29faef64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World.ProceduralSpawner
+  mainCamera: {fileID: 1747834219}
   lanes:
-  - -2
-  - -1
+  - -12
+  - -6
   - 0
-  - 1
-  - 2
+  - 6
+  - 12
   minObstaclesPerChunk: 5
   maxObstaclesPerChunk: 15
   obstacleDensity: 1
-  obstacleHeight: 0
+  obstacleHeight: 3
   obstacleParent: {fileID: 11126072}
   minPickupsPerChunk: 2
   maxPickupsPerChunk: 5
-  pickupHeight: 0.5
+  pickupHeight: 3
   pickupParent: {fileID: 682836147}
-  treePrefab: {fileID: -2940471556523300515, guid: 3766db8eea18a45b1b79af4f94d6d2be, type: 3}
+  treePrefab: {fileID: 8357776843580378703, guid: 3766db8eea18a45b1b79af4f94d6d2be, type: 3}
   rockPrefab: {fileID: 0}
   hotPickupPrefab: {fileID: 3715654014592440983, guid: 0e86421a04cb84a658295a6edb3e29b3, type: 3}
   minSpacing: 15

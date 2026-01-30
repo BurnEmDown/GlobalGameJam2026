@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.Animations;
 
 namespace World
 {
     public class Pickup : MonoBehaviour
     {
+        [SerializeField] private AimConstraint aimConstraint;
+        
         [Header("Pickup Settings")]
         public float frostReduction = 0.25f;    // How much frost to remove
     
@@ -35,6 +38,17 @@ namespace World
             
             // Return to pool or destroy
             gameObject.SetActive(false);
+        }
+
+        public void SetLookAt(Transform lookAt)
+        {
+            ConstraintSource source = new ConstraintSource
+            {
+                sourceTransform = lookAt,
+                weight = 1f
+            };
+            aimConstraint.AddSource(source);
+            aimConstraint.constraintActive = true;
         }
     }
 }
