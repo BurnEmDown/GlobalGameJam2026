@@ -20,6 +20,7 @@ namespace World
         public ProceduralSpawner proceduralSpawner; // Reference to ProceduralSpawner
     
         private Queue<TerrainChunk> activeChunks = new Queue<TerrainChunk>();
+        private TerrainChunk lastCreatedChunk;
         private float nextSpawnZ = 0f;
         private int chunkIndex = 0;
         private IPoolManager poolingService;
@@ -39,7 +40,7 @@ namespace World
             }
         }
     
-        void SpawnChunk()
+        private void SpawnChunk()
         {
             poolingService.GetFromPool<TerrainChunk>("TerrainChunk", terrainChunkParent, (TerrainChunk chunk) =>
             {
@@ -53,49 +54,72 @@ namespace World
                         nextSpawnZ += chunkLength;
                         chunkIndex++;
                     }
+                    if(lastCreatedChunk == null)
+                    {
+                        lastCreatedChunk = chunk;
+                        // First chunk setup
+                        chunk.transform.position = new Vector3(0f, 0f, 0f);
+                        activeChunks.Enqueue(chunk);
+                    }
+                    else
+                    {
+                        SetNextPlane(chunk);
+                    }
                 }
             });
+        }
+        
+        private void SetNextPlane(TerrainChunk plane2)
+        {
+            plane2.transform.parent = null;
+            plane2.SetRandomAngle();
+            plane2.planeStart.parent = lastCreatedChunk.planeEnd;
+            plane2.transform.parent = plane2.planeStart;
+            plane2.planeStart.localPosition = Vector3.zero;
+            plane2.transform.parent = lastCreatedChunk.transform;
+            plane2.planeStart.parent = plane2.transform;
+            lastCreatedChunk = plane2;
         }
     
         public void DespawnOldChunk()
         {
-            TerrainChunk oldChunk = activeChunks.Dequeue();
-            poolingService.ReturnToPool("TerrainChunk", oldChunk);
+            //TerrainChunk oldChunk = activeChunks.Dequeue();
+            //poolingService.ReturnToPool("TerrainChunk", oldChunk);
         }
 
         public void SpawnNewChunk()
         {
-            poolingService.GetFromPool("TerrainChunk", terrainChunkParent, (TerrainChunk chunk) =>
-            {
-                if (chunk != null)
-                {
-                    OnCreateChunk(chunk);
-                }
-            });
+            // poolingService.GetFromPool("TerrainChunk", terrainChunkParent, (TerrainChunk chunk) =>
+            // {
+            //     if (chunk != null)
+            //     {
+            //         OnCreateChunk(chunk);
+            //     }
+            // });
         }
 
         private void OnCreateChunk(TerrainChunk chunk)
         {
-            chunk.transform.parent = transform;
-            chunkXRotation = chunk.transform.rotation.eulerAngles.x;
-
-            // Calculate the offset for proper alignment
-            float yOffset = Mathf.Sin(chunkXRotation * Mathf.Deg2Rad) * chunkLength * -1;
-
-            Vector3 chunkPosition = new Vector3(
-                0f,
-                yOffset * chunkIndex,
-                nextSpawnZ
-            );
-
-            chunk.transform.position = chunkPosition;
-
-            activeChunks.Enqueue(chunk);
-
-            if (proceduralSpawner != null)
-            {
-                proceduralSpawner.PopulateChunk(nextSpawnZ, chunkLength);
-            }
+            // chunk.transform.parent = transform;
+            // chunkXRotation = chunk.transform.rotation.eulerAngles.x;
+            //
+            // // Calculate the offset for proper alignment
+            // float yOffset = Mathf.Sin(chunkXRotation * Mathf.Deg2Rad) * chunkLength * -1;
+            //
+            // Vector3 chunkPosition = new Vector3(
+            //     0f,
+            //     yOffset * chunkIndex,
+            //     nextSpawnZ
+            // );
+            //
+            // chunk.transform.position = chunkPosition;
+            //
+            // activeChunks.Enqueue(chunk);
+            //
+            // if (proceduralSpawner != null)
+            // {
+            //     proceduralSpawner.PopulateChunk(nextSpawnZ, chunkLength);
+            // }
 
             WorldMover.Instance.RegisterObject(chunk.transform);
         }

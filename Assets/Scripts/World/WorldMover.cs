@@ -10,7 +10,7 @@ namespace World
         public static WorldMover Instance { get; private set; }
         
         [Header("Movement Settings")]
-        public float speed = 10f;
+        public float speed = 1f;
         
         private List<Transform> movingObjects = new List<Transform>();
         

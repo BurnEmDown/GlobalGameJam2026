@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 691900463690875812}
   - component: {fileID: 562894701973434687}
   - component: {fileID: 2030668492273645118}
-  - component: {fileID: 7194468406095244585}
   - component: {fileID: 5963688625257838293}
+  - component: {fileID: 1226659213062162127}
   m_Layer: 0
-  m_Name: Plane
-  m_TagString: Untagged
+  m_Name: TerrainChunk
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -118,22 +118,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &7194468406095244585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1172931738585655600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbeeb8fa56c8ff8439cd338dd071b7bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Plane
-  planeStart: {fileID: 2157566818331679650}
-  planeEnd: {fileID: 8735553705062475265}
-  minAngle: 10
-  maxAngle: 40
 --- !u!65 &5963688625257838293
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -155,6 +139,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &1226659213062162127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1172931738585655600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f530acdc2e94646926b1bcc4b41359b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::World.TerrainChunk
+  planeStart: {fileID: 2157566818331679650}
+  planeEnd: {fileID: 8735553705062475265}
+  minAngle: 10
+  maxAngle: 40
 --- !u!1 &2426073213837718635
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,6 +186,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4611360718171433547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4158315129414279127
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7861279369742808246}
+  - component: {fileID: 786533426259039510}
+  - component: {fileID: 962193121445301651}
+  m_Layer: 0
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7861279369742808246
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4158315129414279127}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0.05}
+  m_LocalScale: {x: 1, y: 1, z: 0.1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 279581078970154704}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &786533426259039510
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4158315129414279127}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &962193121445301651
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4158315129414279127}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.0000005, z: 1.0000005}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7136520355271689502
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,6 +279,7 @@ Transform:
   m_Children:
   - {fileID: 318860289758884765}
   - {fileID: 1604347068497938131}
+  - {fileID: 7861279369742808246}
   m_Father: {fileID: 4611360718171433547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &8582727887415879909
