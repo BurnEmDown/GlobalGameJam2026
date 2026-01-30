@@ -6,8 +6,10 @@ namespace World
 {
     public class ProceduralSpawner : MonoBehaviour
     {
+        [SerializeField] private Camera mainCamera;
+        
         [Header("Lane Settings")]
-        public float[] lanes = { -2f, -1f, 0f, 1f, 2f };  // X positions for lanes
+        public float[] lanes = { -8f, -4f, 0f, 4f, 8f };  // X positions for lanes
     
         [Header("Obstacle Settings")]
         public int minObstaclesPerChunk = 5;
@@ -86,6 +88,7 @@ namespace World
                         obstacle.transform.position = position;
                         obstacle.gameObject.SetActive(true);
                         WorldMover.Instance.RegisterObject(obstacle.transform);
+                        obstacle.SetLookAt(mainCamera.transform);
                     }
                 });
             }
@@ -110,6 +113,7 @@ namespace World
                 {
                     pickup.transform.position = position;
                     WorldMover.Instance.RegisterObject(pickup.transform);
+                    pickup.SetLookAt(mainCamera.transform);
                 });
             }
         }

@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7142245693185398022}
-  - component: {fileID: 1065168608599585614}
   - component: {fileID: -8436196120149913423}
-  - component: {fileID: -2940471556523300515}
+  - component: {fileID: 1232037194564401154}
+  - component: {fileID: 8357776843580378703}
   m_Layer: 0
   m_Name: Tree
   m_TagString: Obstacle
@@ -35,18 +35,6 @@ Transform:
   - {fileID: 6182875927459719848}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1065168608599585614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2745256087835639086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1eb36a479c7f4b1691da4a0c66eed385, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::World.Billboard
 --- !u!65 &-8436196120149913423
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -68,7 +56,30 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-2940471556523300515
+--- !u!895512359 &1232037194564401154
+AimConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2745256087835639086}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_AimVector: {x: 0, y: 0, z: 1}
+  m_UpVector: {x: 0, y: 1, z: 0}
+  m_WorldUpVector: {x: 0, y: 1, z: 0}
+  m_WorldUpObject: {fileID: 0}
+  m_UpType: 0
+  m_AffectRotationX: 0
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 0
+  m_IsLocked: 0
+  m_Sources: []
+--- !u!114 &8357776843580378703
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -80,6 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b189107b4e046a3b92f9100d6e9c818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World.Obstacle
+  aimConstraint: {fileID: 1232037194564401154}
 --- !u!1 &4007995231330809675
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,7 +173,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -7317022528246847960, guid: 44b0abd34db8642bcb0a45d904d2b120, type: 3}
+  m_Sprite: {fileID: 6879676874031892783, guid: aa7add0299f0346989caf3c22a4c2960, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2308606579031237485}
   - component: {fileID: 4010154863800292944}
   - component: {fileID: 3715654014592440983}
+  - component: {fileID: 8960985347751910952}
   m_Layer: 0
   m_Name: HotPickup
   m_TagString: Pickup
@@ -67,9 +68,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c957f578a8d4fa59e7378897261a4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World.Pickup
+  aimConstraint: {fileID: 8960985347751910952}
   frostReduction: 0.25
   collectEffect: {fileID: 0}
   collectSound: {fileID: 0}
+--- !u!895512359 &8960985347751910952
+AimConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5609505607790079833}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_AimVector: {x: 0, y: 0, z: 1}
+  m_UpVector: {x: 0, y: 1, z: 0}
+  m_WorldUpVector: {x: 0, y: 1, z: 0}
+  m_WorldUpObject: {fileID: 0}
+  m_UpType: 0
+  m_AffectRotationX: 0
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 0
+  m_IsLocked: 0
+  m_Sources: []
 --- !u!1 &8751584280680307137
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,7 +122,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2308606579031237485}
@@ -151,7 +176,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 6004726093148896001, guid: c81d79412708546949efd951684a9ff5, type: 3}
+  m_Sprite: {fileID: 4569626889479105419, guid: 16cf096d9349d47c4b6dd38ac8c8c87b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
