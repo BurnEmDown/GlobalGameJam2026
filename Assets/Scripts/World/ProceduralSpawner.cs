@@ -53,11 +53,15 @@ namespace World
     
         public void PopulateChunk(TerrainChunk chunk)
         {
+            if(chunk.IsPopulated) return;
+            
             // Ensure pooling service is initialized before use
             InitializePoolingService();
             
             SpawnObstacles(chunk);
             SpawnPickups(chunk);
+            
+            chunk.SetPopulated();
         }
     
         // Helper method to calculate Y position based on chunk rotation and terrain height
@@ -99,7 +103,7 @@ namespace World
                     if (obstacle != null)
                     {
                         obstacle.transform.position = position;
-                        chunk.AddObstacleAsChild(obstacle);
+                        chunk.AddObjectAsChild(obstacle.gameObject);
                         obstacle.gameObject.SetActive(true);
                     }
                 });
@@ -121,7 +125,7 @@ namespace World
                 poolingService.GetFromPool<Pickup>("HotPickup", pickupParent, (Pickup pickup) =>
                 {
                     pickup.transform.position = position;
-                    chunk.AddPickupAsChild(pickup);
+                    chunk.AddObjectAsChild(pickup.gameObject);
                     pickup.gameObject.SetActive(true);
                 });
             }

@@ -52,7 +52,7 @@ public class TrackManager : MonoBehaviour
         _lastPlane = plane2;
         if (proceduralSpawner != null)
         {
-             proceduralSpawner.PopulateChunk(plane2);
+            proceduralSpawner.PopulateChunk(plane2);
         }
     }
 
@@ -66,7 +66,6 @@ public class TrackManager : MonoBehaviour
             _currPlane = _planes.Peek();
             _planes.Enqueue(plane2);
             _currPlane.transform.parent = null;
-            plane2.RemoveAndDeactivateChildObjects();
             plane2.transform.parent = _currPlane.transform;
             _moveDir = (_currPlane.planeEnd.position - _currPlane.planeStart.position).normalized;
             player.EnterPlane(_currPlane, _moveDir);
