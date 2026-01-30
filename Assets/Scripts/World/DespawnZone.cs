@@ -20,11 +20,6 @@ namespace World
             // Get pooling service
             poolingService = CoreServices.Get<IPoolManager>();
             playerPosition = playerObject.transform.position;
-        
-            // Set up trigger collider
-            triggerCollider = gameObject.AddComponent<BoxCollider>();
-            triggerCollider.isTrigger = true;
-            triggerCollider.size = triggerSize;
         }
     
         void OnTriggerEnter(Collider other)
