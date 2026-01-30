@@ -24,7 +24,7 @@ public class TrackManager : MonoBehaviour
                 _firstPlane = plane2;
                 _currPlane = plane2;
                 _moveDir = (_currPlane.planeEnd.position - _currPlane.planeStart.position).normalized;
-                //player.EnterPlane(_currPlane, _moveDir);
+                player.EnterPlane(_currPlane, _moveDir);
             }
             else
             {
@@ -52,7 +52,7 @@ public class TrackManager : MonoBehaviour
         _lastPlane = plane2;
         if (proceduralSpawner != null)
         {
-             //proceduralSpawner.PopulateChunk(nextSpawnZ, chunkLength);
+             proceduralSpawner.PopulateChunk(plane2);
         }
     }
 
@@ -66,10 +66,11 @@ public class TrackManager : MonoBehaviour
             _currPlane = _planes.Peek();
             _planes.Enqueue(plane2);
             _currPlane.transform.parent = null;
+            plane2.RemoveAndDeactivateChildObjects();
             plane2.transform.parent = _currPlane.transform;
             _moveDir = (_currPlane.planeEnd.position - _currPlane.planeStart.position).normalized;
-            //player.EnterPlane(_currPlane, _moveDir);
-            //SetNextPlane(plane2);
+            player.EnterPlane(_currPlane, _moveDir);
+            SetNextPlane(plane2);
         }
     }
 }

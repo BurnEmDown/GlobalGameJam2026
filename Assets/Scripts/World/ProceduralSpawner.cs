@@ -51,13 +51,13 @@ namespace World
             poolingService.InitPool<Pickup>("HotPickup", 20);
         }
     
-        public void PopulateChunk(float chunkStartZ, float chunkLength, float chunkXRotation, float chunkHeight)
+        public void PopulateChunk(TerrainChunk chunk)
         {
             // Ensure pooling service is initialized before use
             InitializePoolingService();
             
-            SpawnObstacles(chunkStartZ, chunkLength, chunkXRotation, chunkHeight);
-            SpawnPickups(chunkStartZ, chunkLength, chunkXRotation, chunkHeight);
+            SpawnObstacles(chunk);
+            SpawnPickups(chunk);
         }
     
         // Helper method to calculate Y position based on chunk rotation and terrain height
@@ -76,27 +76,18 @@ namespace World
             return terrainHeight + baseHeight + -yOffset;
         }
     
-        void SpawnObstacles(float chunkStartZ, float chunkLength, float chunkXRotation, float chunkHeight)
+        void SpawnObstacles(TerrainChunk chunk)
         {
+            float chunkStartZ = chunk.planeStart.transform.position.z;
+            float chunkEndZ = chunk.planeEnd.transform.position.z;
+            
             int obstacleCount = Mathf.RoundToInt(
                 Random.Range(minObstaclesPerChunk, maxObstaclesPerChunk) * obstacleDensity
             );
         
             for (int i = 0; i < obstacleCount; i++)
             {
-                // Random lane
-                float x = lanes[Random.Range(0, lanes.Length)];
-            
-                // Random Z position within chunk (leave margins)
-                float z = chunkStartZ + Random.Range(10f, chunkLength - 10f);
-                
-                // Calculate local Z position within the chunk
-                float localZ = z - chunkStartZ;
-                
-                // Calculate correct Y position based on chunk rotation and terrain height
-                float y = CalculateYPosition(obstacleHeight, localZ, chunkXRotation, chunkHeight);
-            
-                Vector3 position = new Vector3(x, y, z);
+                var position = CalculatePosition(chunk, chunkStartZ, chunkEndZ);
             
                 // Random obstacle type
                 //string obstacleType = Random.value > 0.5f ? "Tree" : "Rock";
@@ -108,42 +99,50 @@ namespace World
                     if (obstacle != null)
                     {
                         obstacle.transform.position = position;
+                        chunk.AddObstacleAsChild(obstacle);
                         obstacle.gameObject.SetActive(true);
-                        WorldMover.Instance.RegisterObject(obstacle.transform);
-                        obstacle.SetLookAt(mainCamera.transform);
                     }
                 });
             }
         }
     
-        void SpawnPickups(float chunkStartZ, float chunkLength, float chunkXRotation, float chunkHeight)
+        void SpawnPickups(TerrainChunk chunk)
         {
+            float chunkStartZ = chunk.planeStart.transform.position.z;
+            float chunkEndZ = chunk.planeEnd.transform.position.z;
+            
             int pickupCount = Random.Range(minPickupsPerChunk, maxPickupsPerChunk);
         
             for (int i = 0; i < pickupCount; i++)
             {
-                // Random lane
-                float x = lanes[Random.Range(0, lanes.Length)];
-            
-                // Random Z position within chunk
-                float z = chunkStartZ + Random.Range(10f, chunkLength - 10f);
-                
-                // Calculate local Z position within the chunk
-                float localZ = z - chunkStartZ;
-                
-                // Calculate correct Y position based on chunk rotation and terrain height
-                float y = CalculateYPosition(pickupHeight, localZ, chunkXRotation, chunkHeight);
-            
-                Vector3 position = new Vector3(x, y, z);
-            
+                var position = CalculatePosition(chunk, chunkStartZ, chunkEndZ);
+
                 // Spawn from pooling service
                 poolingService.GetFromPool<Pickup>("HotPickup", pickupParent, (Pickup pickup) =>
                 {
                     pickup.transform.position = position;
-                    WorldMover.Instance.RegisterObject(pickup.transform);
-                    pickup.SetLookAt(mainCamera.transform);
+                    chunk.AddPickupAsChild(pickup);
+                    pickup.gameObject.SetActive(true);
                 });
             }
+        }
+
+        private Vector3 CalculatePosition(TerrainChunk chunk, float chunkStartZ, float chunkEndZ)
+        {
+            // Random lane
+            float x = lanes[Random.Range(0, lanes.Length)];
+
+            // Random Z position within chunk
+            float z = Random.Range(chunkStartZ, chunkEndZ);
+
+            // Calculate local Z position within the chunk
+            float localZ = z - chunkStartZ;
+
+            // Calculate correct Y position based on chunk rotation and terrain height
+            float y = CalculateYPosition(obstacleHeight, localZ, chunk.transform.rotation.x, chunk.transform.position.y);
+
+            Vector3 position = new Vector3(x, y, z);
+            return position;
         }
     }
 }

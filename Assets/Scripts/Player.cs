@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using World;
 
 public class Player : MonoBehaviour
 {
@@ -67,7 +68,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        //SetSpeed();
+        SetSpeed();
         SetMovement();
     }
 
@@ -109,7 +110,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void EnterPlane(Plane plane, Vector3 moveDir)
+    public void EnterPlane(TerrainChunk plane, Vector3 moveDir)
     {
         float angle = plane.transform.localEulerAngles.x - 90,
             t = Mathf.Clamp(angle / 90f, 0, 1);
