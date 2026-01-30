@@ -1,0 +1,44 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 11.01.2012 12:54:55
+
+newmtl Poles_Downhill_Ski_body
+	Ns 40.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 1.0000 1.0000 1.0000
+	Kd 1.0000 1.0000 1.0000
+	Ks 0.7200 0.7200 0.7200
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Downhill_Ski.jpg
+	map_Kd Downhill_Ski.jpg
+
+newmtl Poles_Downhill_Ski_detail_2
+	Ns 60.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 1.0000 1.0000 1.0000
+	Kd 1.0000 1.0000 1.0000
+	Ks 0.7200 0.7200 0.7200
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Downhill_Ski_fabric.jpg
+	map_Kd Downhill_Ski_fabric.jpg
+	map_bump Downhill_Ski_fabric_bump.jpg
+	bump Downhill_Ski_fabric_bump.jpg
+
+newmtl Poles_Downhill_Ski_detail_1
+	Ns 40.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0118 0.0118 0.0118
+	Kd 0.0118 0.0118 0.0118
+	Ks 0.7200 0.7200 0.7200
+	Ke 0.0000 0.0000 0.0000
