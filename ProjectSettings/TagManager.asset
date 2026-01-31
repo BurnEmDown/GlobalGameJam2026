@@ -4,11 +4,11 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Terrain
-  - Obstacle
-  - Goal
   - Pickup
   - TerrainGround
+  - Obstacle
+  - Goal
+  - Terrain
   layers:
   - Default
   - TransparentFX
@@ -18,8 +18,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Plane
+  - PlayerDie
   - 
   - 
   - 
