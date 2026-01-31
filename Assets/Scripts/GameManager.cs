@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,14 +25,10 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public HUDController HUD;
     public Player player;
-    
+    public FlakeparticleCleaner cleaner;
+
     [Header("Score Tracking")]
     private int currentPoints = 0;
-    
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
     {
@@ -39,6 +36,7 @@ public class GameManager : MonoBehaviour
         {
             HUD = FindFirstObjectByType<HUDController>();
             player = FindFirstObjectByType<Player>();
+            cleaner = FindFirstObjectByType<FlakeparticleCleaner>();
             
             // Reset points when loading game scene
             currentPoints = 0;
@@ -49,12 +47,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -118,14 +118,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private bool GameFailed()
+    public bool gameFailed;
+    public bool GameFailed()
     {
-        throw new System.NotImplementedException();
+        return gameFailed;
     }
 
-    private bool GameComplete()
+    private bool gameComplete;
+    public bool GameComplete()
     {
-        throw new System.NotImplementedException();
+        return gameComplete;
     }
 
     private IEnumerator GameEnding()
@@ -165,4 +167,6 @@ public class GameManager : MonoBehaviour
     {
         return currentPoints;
     }
+    
+    
 }

@@ -12,9 +12,20 @@ namespace World
         public GameObject clearEffect;
         public AudioClip clearSound;
 
+        [Header("References")]
+        private GameManager gameManager;
+
         void OnEnable()
         {
             hasBeenCleared = false;
+        }
+
+        /// <summary>
+        /// Set the GameManager reference when spawned
+        /// </summary>
+        public void SetGameManager(GameManager manager)
+        {
+            gameManager = manager;
         }
         
         private void OnTriggerEnter(Collider other)
@@ -29,6 +40,16 @@ namespace World
         {
             hasBeenCleared = true;
             
+            // Award points through GameManager
+            if (gameManager != null)
+            {
+                gameManager.RegisterPointPickup(points);
+            }
+            else
+            {
+                Debug.LogWarning("Goal: GameManager reference not set!");
+            }
+            
             // Play clear effect
             if(clearEffect != null)
             {
@@ -41,8 +62,10 @@ namespace World
                 AudioSource.PlayClipAtPoint(clearSound, transform.position);
             }
             
-            // Notify game manager or player to add points
             Debug.Log($"Goal Cleared! Points Awarded: {points}");
+            
+            // Disable the goal
+            gameObject.SetActive(false);
         }
     }
 }

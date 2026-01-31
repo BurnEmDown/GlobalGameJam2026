@@ -33,10 +33,11 @@ namespace World
         public float minSpacing = 15f;          // Minimum distance between objects in same lane
     
         private IPoolManager poolingService;
-    
+        private GameManager gameManager;
         void Start()
         {
             InitializePoolingService();
+            gameManager = GameManager.instance;
         }
         
         private void InitializePoolingService()
