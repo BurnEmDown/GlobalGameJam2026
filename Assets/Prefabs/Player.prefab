@@ -280,7 +280,7 @@ Transform:
   m_GameObject: {fileID: 906598480433271437}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.4225, z: 0}
+  m_LocalPosition: {x: 0, y: -0.422, z: 0}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -408,6 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   onGameFailedObject: {fileID: 3575178677521544219}
+  sound: {fileID: 0}
   sphere: {fileID: 1185312104212028279}
   cam: {fileID: 2481901348137080649}
   speedText: {fileID: 0}
@@ -472,8 +473,8 @@ MonoBehaviour:
   player: {fileID: 8364517294348142467}
   trackManager: {fileID: 0}
   frostCam: {fileID: 0}
-  stopTime: 2
-  flySpeed: 7
+  stopTime: 1
+  flySpeed: 10
   camResetTime: 5
   accessories:
   - {fileID: 8142224195815174365}

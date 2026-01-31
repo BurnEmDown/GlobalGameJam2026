@@ -7,6 +7,7 @@ public class PlayerDie : MonoBehaviour
 	public Player player;
 	public TrackManager trackManager;
 	public GameObject frostCam;
+
 	public float stopTime = 2,
 		flySpeed = 10,
 		camResetTime = 2;

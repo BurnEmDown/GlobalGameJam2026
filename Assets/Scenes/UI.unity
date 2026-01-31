@@ -345,7 +345,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1357,7 +1357,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1625,9 +1625,9 @@ MonoBehaviour:
   HUD: {fileID: 0}
   player: {fileID: 0}
   cleaner: {fileID: 0}
-  MasterBusVolume: 0
-  MusicBusVolume: 0
-  SfxBusVolume: 0
+  MasterBusVolume: 1
+  MusicBusVolume: 1
+  SfxBusVolume: 1
   musicSlider: {fileID: 4964930804013417604}
   sfxSlider: {fileID: 192327144}
   windSlider: {fileID: 1168580565}
@@ -3335,7 +3335,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

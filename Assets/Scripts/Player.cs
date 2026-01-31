@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using UnityEngine;
 using World;
 using TMPro;
@@ -6,6 +7,7 @@ using TMPro;
 public class Player : MonoBehaviour
 {
     public GameObject onGameFailedObject;
+    [SerializeField] private StudioEventEmitter sound;
     
     public Transform sphere;
     public Transform cam;
@@ -43,6 +45,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        PlayWoosh();
+        
         float mouseX = Input.GetAxis("Mouse X"),
             mouseY = -Input.GetAxis("Mouse Y");
         if (mouseX == 0)
@@ -96,6 +100,8 @@ public class Player : MonoBehaviour
 
     private void SetMovement()
     {
+        
+        
         float xMovement = 0f;
         
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.Alpha6))
@@ -110,6 +116,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+            sound.Stop();
             _strafeAngle /= 1.01f;
             if (Mathf.Abs(_strafeAngle) < 0.001f)
             {
@@ -118,13 +125,22 @@ public class Player : MonoBehaviour
         }
         
         // Move the sphere left/right with boundary constraints
-        Vector3 spherePosition = sphere.position;
-        spherePosition.x = Mathf.Clamp(spherePosition.x + xMovement, minX, maxX);
-        sphere.position = spherePosition;
+        //Vector3 spherePosition = sphere.position;
+        //spherePosition.x = Mathf.Clamp(spherePosition.x + xMovement, minX, maxX);
+        //sphere.position = spherePosition;
         
         sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
     }
-    
+
+    private void PlayWoosh()
+    {
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.Alpha6) || 
+            Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            sound.Play();
+        }
+    }
+
 
     public void EnterPlane(TerrainChunk plane, Vector3 moveDir)
     {
