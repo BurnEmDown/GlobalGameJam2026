@@ -54,12 +54,15 @@ MonoBehaviour:
   minObstaclesPerChunk: 0
   maxObstaclesPerChunk: 2
   obstacleDensity: 1
-  obstacleHeight: 0
+  obstacleHeight: 1.5
   obstacleParent: {fileID: 0}
   minPickupsPerChunk: 2
   maxPickupsPerChunk: 5
-  pickupHeight: 0
+  pickupHeight: 1
   pickupParent: {fileID: 0}
+  minGoalsPerChunk: 1
+  maxGoalsPerChunk: 2
+  goalHeight: 0
   treePrefab: {fileID: 8357776843580378703, guid: 3766db8eea18a45b1b79af4f94d6d2be, type: 3}
   rockPrefab: {fileID: 0}
   hotPickupPrefab: {fileID: 3715654014592440983, guid: 0e86421a04cb84a658295a6edb3e29b3, type: 3}

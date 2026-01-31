@@ -3,13 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
-  serializedVersion: 3
   tags:
-  - Obstacle
-  - Pickup
   - Terrain
+  - Obstacle
   - Goal
+  - Pickup
+  - TerrainGround
   layers:
   - Default
   - TransparentFX
@@ -47,3 +46,5 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  m_RenderingLayers:
+  - Default
