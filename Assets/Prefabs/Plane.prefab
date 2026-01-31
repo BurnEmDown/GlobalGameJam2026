@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2030668492273645118}
   - component: {fileID: 7194468406095244585}
   - component: {fileID: 5963688625257838293}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,7 +141,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1172931738585655600}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 07336f47a1071b84da15e721772825e8, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

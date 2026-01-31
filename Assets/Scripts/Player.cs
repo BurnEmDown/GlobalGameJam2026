@@ -84,8 +84,8 @@ public class Player : MonoBehaviour
 		{
 			speed += 0.0005f;
 			_currKph = Math.Min(Convert.ToInt32(speed * _multiplySpeedBy), maxKph);
-		speedText.text = _currKph.ToString();
-		_multiplySpeedBy *= 1.001f;	
+			speedText.text = _currKph.ToString();
+			_multiplySpeedBy *= 1.001f;	
 		}
         //if (speed < _targetSpeed)
         //{
