@@ -56,8 +56,8 @@ MonoBehaviour:
   obstacleDensity: 1
   obstacleHeight: 2
   obstacleParent: {fileID: 0}
-  minPickupsPerChunk: 0
-  maxPickupsPerChunk: 1
+  minPickupsPerChunk: 1
+  maxPickupsPerChunk: 2
   pickupHeight: 1
   pickupParent: {fileID: 0}
   minGoalsPerChunk: 1
