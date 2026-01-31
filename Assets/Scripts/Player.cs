@@ -13,6 +13,9 @@ public class Player : MonoBehaviour
         rotationSpeed = 1f,
         maxStrafeAngle = 25,
         strafeSpeed = 1,
+        strafeMovementSpeed = 5f,
+        minX = -10f,
+        maxX = 10f,
         minAngleX = -30,
         maxAngleX = 30,
         minAngleY = -85,
@@ -91,13 +94,17 @@ public class Player : MonoBehaviour
 
     private void SetMovement()
     {
+        float xMovement = 0f;
+        
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.Alpha6))
         {
             _strafeAngle = Mathf.Min(_strafeAngle + strafeSpeed * Time.fixedDeltaTime, maxStrafeAngle);
+            xMovement = strafeMovementSpeed * Time.fixedDeltaTime;
         }
         else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Alpha4))
         {
             _strafeAngle = Mathf.Max(_strafeAngle - strafeSpeed * Time.fixedDeltaTime, -maxStrafeAngle);
+            xMovement = -strafeMovementSpeed * Time.fixedDeltaTime;
         }
         else
         {
@@ -107,6 +114,11 @@ public class Player : MonoBehaviour
                 _strafeAngle = 0;
             }
         }
+        
+        // Move the sphere left/right with boundary constraints
+        Vector3 spherePosition = sphere.position;
+        spherePosition.x = Mathf.Clamp(spherePosition.x + xMovement, minX, maxX);
+        sphere.position = spherePosition;
         
         sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
     }
