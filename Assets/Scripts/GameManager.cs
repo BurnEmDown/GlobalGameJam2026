@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Text;
+using FMOD.Studio;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -29,6 +33,34 @@ public class GameManager : MonoBehaviour
 
     [Header("Score Tracking")]
     private int currentPoints = 0;
+
+    [Header("Volume")]
+    [Range(0, 1)]
+    public float MasterBusVolume = 0;
+    [Range(0, 1)]
+    public float MusicBusVolume = 0;
+    [Range(0, 1)]
+    public float SfxBusVolume = 0;
+
+    private VCA vcaMusic;
+    private VCA vcaSFX;
+    private VCA vcaWind;
+
+    // Set volume methods (volume range: 0.0 to 1.0)
+    public void SetMusicVolume(float volume)
+    {
+        vcaMusic.setVolume(volume);
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        vcaSFX.setVolume(volume);
+    }
+
+    public void SetWindVolume(float volume)
+    {
+        vcaWind.setVolume(volume);
+    }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
     {
@@ -63,9 +95,39 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    public Slider musicSlider;
+    public Slider sfxSlider;
+    public Slider windSlider;
+    
     private void Start()
     {
+        // Get VCA references by path
+        // Make sure these match your VCA names in FMOD Studio
+        vcaMusic = RuntimeManager.GetVCA("vca:/Music");
+        vcaSFX = RuntimeManager.GetVCA("vca:/SFX");
+        vcaWind = RuntimeManager.GetVCA("vca:/Wind");
+        musicSlider.value = GetMusicVolume();
+        sfxSlider.value = GetSFXVolume();
+        windSlider.value = GetWindVolume();
         m_CurrentState = GameState.MainMenu;
+    }
+    
+    public float GetMusicVolume()
+    {
+        vcaMusic.getVolume(out float volume);
+        return volume;
+    }
+
+    public float GetSFXVolume()
+    {
+        vcaSFX.getVolume(out float volume);
+        return volume;
+    }
+
+    public float GetWindVolume()
+    {
+        vcaWind.getVolume(out float volume);
+        return volume;
     }
     
     /// <summary>

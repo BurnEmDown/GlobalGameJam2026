@@ -292,7 +292,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9143182395221294308, guid: 0e215d67eabb4344faa5407f483de23f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1065077919}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5924973804700300199, guid: 0e215d67eabb4344faa5407f483de23f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 240524941}
   m_SourcePrefab: {fileID: 100100000, guid: 0e215d67eabb4344faa5407f483de23f, type: 3}
 --- !u!20 &240524938 stripped
 Camera:
@@ -304,6 +307,133 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9143182395221294308, guid: 0e215d67eabb4344faa5407f483de23f, type: 3}
   m_PrefabInstance: {fileID: 240524937}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &240524940 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5924973804700300199, guid: 0e215d67eabb4344faa5407f483de23f, type: 3}
+  m_PrefabInstance: {fileID: 240524937}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &240524941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240524940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -2028895187
+      Data2: 1253047856
+      Data3: -1847436379
+      Data4: -556028443
+    Path: event:/Frosting
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 12
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &312095448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 312095449}
+  - component: {fileID: 312095450}
+  m_Layer: 0
+  m_Name: image_0 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &312095449
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 312095448}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -315, z: 0}
+  m_LocalScale: {x: 1, y: 100, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1252741919}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &312095450
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 312095448}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 1208040086343421634, guid: c630eec22a058254f948e97e64aecf04, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 3.51, y: 6.26}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!1001 &652475791
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -356,11 +486,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: BGPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 8371185494031706394, guid: 24f95373fb51f7048bc274551ab8e6af, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4555970224981289470, guid: 24f95373fb51f7048bc274551ab8e6af, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1252741919}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24f95373fb51f7048bc274551ab8e6af, type: 3}
+--- !u!4 &652475792 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4555970224981289470, guid: 24f95373fb51f7048bc274551ab8e6af, type: 3}
+  m_PrefabInstance: {fileID: 652475791}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &682836147
 GameObject:
   m_ObjectHideFlags: 0
@@ -694,6 +836,98 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!1 &1252741918
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1252741919}
+  - component: {fileID: 1252741920}
+  m_Layer: 0
+  m_Name: image_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1252741919
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252741918}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -73}
+  m_LocalScale: {x: 1, y: 0.01, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 312095449}
+  m_Father: {fileID: 652475792}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1252741920
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252741918}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 1208040086343421634, guid: c630eec22a058254f948e97e64aecf04, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 1
+  m_DrawMode: 0
+  m_Size: {x: 3.51, y: 6.26}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!1 &1456861166
 GameObject:
   m_ObjectHideFlags: 0
@@ -849,7 +1083,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5704288796884715805, guid: 945b873ad5618414ead0d9718a3c9034, type: 3}
   m_PrefabInstance: {fileID: 4016021848607703432}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4016021848607703433}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7852e969655c9184ab4f110c1b5e9f85, type: 3}
@@ -979,6 +1213,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5704288796884715805, guid: 945b873ad5618414ead0d9718a3c9034, type: 3}
+      propertyPath: sound
+      value: 
+      objectReference: {fileID: 4016021848607703434}
+    - target: {fileID: 5704288796884715805, guid: 945b873ad5618414ead0d9718a3c9034, type: 3}
       propertyPath: speedText
       value: 
       objectReference: {fileID: 1211233234}
@@ -1033,8 +1271,47 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3229491393737657539, guid: 945b873ad5618414ead0d9718a3c9034, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4016021848607703434}
   m_SourcePrefab: {fileID: 100100000, guid: 945b873ad5618414ead0d9718a3c9034, type: 3}
+--- !u!1 &4016021848607703433 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3229491393737657539, guid: 945b873ad5618414ead0d9718a3c9034, type: 3}
+  m_PrefabInstance: {fileID: 4016021848607703432}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4016021848607703434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4016021848607703433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 434283870
+      Data2: 1179013740
+      Data3: -1174959454
+      Data4: -744180404
+    Path: event:/Skate
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &5188081011445965563
 PrefabInstance:
   m_ObjectHideFlags: 0

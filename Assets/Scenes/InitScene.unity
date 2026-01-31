@@ -193,7 +193,7 @@ MonoBehaviour:
   - SFX
   - Wind
   CollisionTag: 
-  PreloadSamples: 0
+  PreloadSamples: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
