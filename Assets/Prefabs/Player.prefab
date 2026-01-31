@@ -158,16 +158,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   sphere: {fileID: 7807477730766734243}
   cam: {fileID: 8409700181320711728}
-  minSpeed: 0.1
-  maxSpeed: 1
+  speedText: {fileID: 0}
   rotationSpeed: 1
   maxStrafeAngle: 25
-  strafeSpeed: 10
+  strafeSpeed: 30
   minAngleX: -30
   maxAngleX: 30
   minAngleY: -30
   maxAngleY: 80
   mouseSensitivity: 100
+  maxKph: 250
 --- !u!1 &5548282546694871791
 GameObject:
   m_ObjectHideFlags: 0

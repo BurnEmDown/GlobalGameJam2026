@@ -1,13 +1,15 @@
 using System;
 using UnityEngine;
 using World;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     public Transform sphere;
     public Transform cam;
-    public float minSpeed = 1.0f,
-        maxSpeed = 10f,
+	public TMP_Text speedText;
+    public float //minSpeed = 1.0f,
+        //maxSpeed = 10f,
         rotationSpeed = 1f,
         maxStrafeAngle = 25,
         strafeSpeed = 1,
@@ -16,6 +18,7 @@ public class Player : MonoBehaviour
         minAngleY = -85,
         maxAngleY = 60,
         mouseSensitivity = 100;
+	public int maxKph = 250;
 
     public float speed { get; set; }
     private float _targetSpeed;
@@ -24,6 +27,9 @@ public class Player : MonoBehaviour
     private float _mouseLookAngleX,
         _mouseLookAngleY;
     private Vector3 _startCamAngles;
+	private float _multiplySpeedBy = 50;
+	bool isIncreasingSpeed = true;
+	private int _currKph;
 
     void Start()
     {
@@ -74,20 +80,13 @@ public class Player : MonoBehaviour
 
     private void SetSpeed()
     {
-        if (speed < _targetSpeed)
+        if (_currKph < maxKph)
         {
-            if (speed < 0.00001f)
-                speed = 0.001f;
-            speed = Mathf.Min(speed * 1.1f, _targetSpeed);
+            speed += 0.0005f;
+            _currKph = Math.Min(Convert.ToInt32(speed * _multiplySpeedBy), maxKph);
+            speedText.text = _currKph.ToString();
+            _multiplySpeedBy *= 1.001f;
         }
-        else if (speed > _targetSpeed)
-        {
-            speed = Mathf.Max(speed / 1.1f, _targetSpeed);
-            //if (speed < 0.001f)
-            //    speed = 0;
-        }
-
-        sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
     }
 
     private void SetMovement()
@@ -108,13 +107,16 @@ public class Player : MonoBehaviour
                 _strafeAngle = 0;
             }
         }
+        
+        sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
     }
+    
 
     public void EnterPlane(TerrainChunk plane, Vector3 moveDir)
     {
-        float angle = plane.transform.localEulerAngles.x - 90,
-            t = Mathf.Clamp(angle / 90f, 0, 1);
-        _targetSpeed = t * maxSpeed + (1 - t) * minSpeed;
+        //float angle = plane.transform.localEulerAngles.x - 90,
+        //    t = Mathf.Clamp(angle / 90f, 0, 1);
+        //_targetSpeed = t * maxSpeed + (1 - t) * minSpeed;
 
         _targetLookDir = moveDir;
     }
