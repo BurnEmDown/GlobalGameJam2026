@@ -37,7 +37,6 @@ public class GameManager : MonoBehaviour
             HUD = FindFirstObjectByType<HUDController>();
             player = FindFirstObjectByType<Player>();
             cleaner = FindFirstObjectByType<ClearParticlesAlon>();
-			print("!!!! " + cleaner);
             
             // Reset points when loading game scene
             currentPoints = 0;
