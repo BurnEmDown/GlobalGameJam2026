@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Game Is Starting");
         yield return m_StartWait;
-        SceneManager.LoadScene("Scenes/GameSceneAlon");
+        SceneManager.LoadScene("Scenes/GameScene");
     }
     
     private IEnumerator GameActive()

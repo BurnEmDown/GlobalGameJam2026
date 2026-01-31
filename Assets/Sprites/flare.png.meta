@@ -3,8 +3,8 @@ guid: 571e931224ddad1448cc4c382aaad29b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1798201039300388096
-    second: flare_0
+      213: -6056081392082059820
+    second: "\u2014Pngtree\u2014white lens flare light effect_14500957_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: flare_0
+      name: "\u2014Pngtree\u2014white lens flare light effect_14500957_0"
       rect:
         serializedVersion: 2
         x: 218
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 00b13c99ea18b07e0800000000000000
-      internalID: -1798201039300388096
+      spriteID: 4dd78167f0a74fba0800000000000000
+      internalID: -6056081392082059820
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      flare_0: -1798201039300388096
+      "\u2014Pngtree\u2014white lens flare light effect_14500957_0": -6056081392082059820
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

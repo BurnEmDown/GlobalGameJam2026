@@ -80,27 +80,13 @@ public class Player : MonoBehaviour
 
     private void SetSpeed()
     {
-		if (_currKph < maxKph)
-		{
-			speed += 0.0005f;
-			_currKph = Math.Min(Convert.ToInt32(speed * _multiplySpeedBy), maxKph);
-		speedText.text = _currKph.ToString();
-		_multiplySpeedBy *= 1.001f;	
-		}
-        //if (speed < _targetSpeed)
-        //{
-        //    if (speed < 0.00001f)
-        //        speed = 0.001f;
-        //    speed = Mathf.Min(speed * 1.1f, _targetSpeed);
-        //}
-        //else if (speed > _targetSpeed)
-        //{
-        //    speed = Mathf.Max(speed / 1.1f, _targetSpeed);
-        //    //if (speed < 0.001f)
-        //    //    speed = 0;
-        //}
-
-        sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
+        if (_currKph < maxKph)
+        {
+            speed += 0.0005f;
+            _currKph = Math.Min(Convert.ToInt32(speed * _multiplySpeedBy), maxKph);
+            speedText.text = _currKph.ToString();
+            _multiplySpeedBy *= 1.001f;
+        }
     }
 
     private void SetMovement()
@@ -121,9 +107,12 @@ public class Player : MonoBehaviour
                 _strafeAngle = 0;
             }
         }
+        
+        sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
     }
+    
 
-    public void EnterPlane(Plane plane, Vector3 moveDir)
+    public void EnterPlane(TerrainChunk plane, Vector3 moveDir)
     {
         //float angle = plane.transform.localEulerAngles.x - 90,
         //    t = Mathf.Clamp(angle / 90f, 0, 1);

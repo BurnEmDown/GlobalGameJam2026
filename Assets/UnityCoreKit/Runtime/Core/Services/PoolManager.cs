@@ -280,6 +280,7 @@ namespace UnityCoreKit.Runtime.Core.Services
             returnedObject.gameObject.SetActive(false);
             pools[poolName].availableItems.Add(returnedObject);
             pools[poolName].unavailableItems.Remove(returnedObject);
+            returnedObject.transform.SetParent(pools[poolName].PoolHolder.transform);
         }
     }
 
