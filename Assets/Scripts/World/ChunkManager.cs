@@ -79,6 +79,9 @@ namespace World
             plane2.transform.parent = lastCreatedChunk.transform;
             plane2.planeStart.parent = plane2.transform;
             lastCreatedChunk = plane2;
+            
+            // Generate spline for the new chunk
+            plane2.GenerateSpline();
         }
     
         public void DespawnOldChunk()
@@ -122,6 +125,12 @@ namespace World
             // }
 
             WorldMover.Instance.RegisterObject(chunk.transform);
+            
+            // Populate the chunk with objects
+            if (proceduralSpawner != null)
+            {
+                proceduralSpawner.PopulateChunk(chunk);
+            }
         }
     }
 }

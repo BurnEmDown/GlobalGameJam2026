@@ -27,6 +27,7 @@ namespace World
         [Header("Goal Settings")]
         public int minGoalsPerChunk = 1;
         public int maxGoalsPerChunk = 2;
+        public float goalHeight = 1f;
         
         [Header("Prefab References")]
         public Obstacle treePrefab;
@@ -64,6 +65,9 @@ namespace World
             // Ensure pooling service is initialized before use
             InitializePoolingService();
             
+            // Generate the spline for this chunk
+            chunk.GenerateSpline();
+            
             SpawnObstacles(chunk);
             SpawnPickups(chunk);
             SpawnGoals(chunk);
@@ -84,21 +88,18 @@ namespace World
             // As we move along Z on a tilted surface, the height changes by: distance * sin(angle)
             float yOffset = localZ * Mathf.Sin(rotationRad);
             
-            return terrainHeight + baseHeight + -yOffset;
+            return terrainHeight +baseHeight -yOffset;
         }
     
         void SpawnObstacles(TerrainChunk chunk)
         {
-            float chunkStartZ = chunk.planeStart.transform.position.z;
-            float chunkEndZ = chunk.planeEnd.transform.position.z;
-            
             int obstacleCount = Mathf.RoundToInt(
                 Random.Range(minObstaclesPerChunk, maxObstaclesPerChunk) * obstacleDensity
             );
         
             for (int i = 0; i < obstacleCount; i++)
             {
-                var position = CalculatePosition(chunk, chunkStartZ, chunkEndZ);
+                var position = CalculatePositionOnSpline(chunk, obstacleHeight);
             
                 // Random obstacle type
                 //string obstacleType = Random.value > 0.5f ? "Tree" : "Rock";
@@ -119,14 +120,11 @@ namespace World
     
         void SpawnPickups(TerrainChunk chunk)
         {
-            float chunkStartZ = chunk.planeStart.transform.position.z;
-            float chunkEndZ = chunk.planeEnd.transform.position.z;
-            
             int pickupCount = Random.Range(minPickupsPerChunk, maxPickupsPerChunk);
         
             for (int i = 0; i < pickupCount; i++)
             {
-                var position = CalculatePosition(chunk, chunkStartZ, chunkEndZ);
+                var position = CalculatePositionOnSpline(chunk, pickupHeight);
 
                 // Spawn from pooling service
                 poolingService.GetFromPool<Pickup>("HotPickup", pickupParent, (Pickup pickup) =>
@@ -140,14 +138,11 @@ namespace World
         
         void SpawnGoals(TerrainChunk chunk)
         {
-            float chunkStartZ = chunk.planeStart.transform.position.z;
-            float chunkEndZ = chunk.planeEnd.transform.position.z;
-            
             int pickupCount = Random.Range(minGoalsPerChunk, maxGoalsPerChunk);
         
             for (int i = 0; i < pickupCount; i++)
             {
-                var position = CalculatePosition(chunk, chunkStartZ, chunkEndZ);
+                var position = CalculatePositionOnSpline(chunk, goalHeight);
 
                 // Spawn from pooling service
                 poolingService.GetFromPool<Goal>("Goal1", pickupParent, (Goal goal) =>
@@ -159,21 +154,20 @@ namespace World
             }
         }
 
-        private Vector3 CalculatePosition(TerrainChunk chunk, float chunkStartZ, float chunkEndZ)
+        private Vector3 CalculatePositionOnSpline(TerrainChunk chunk, float baseHeight)
         {
-            // Random lane
+            // Random position along the spline (0 to 1)
+            float t = Random.Range(0.1f, 0.9f); // Leave margins at start and end
+            
+            // Get position on spline
+            Vector3 splinePosition = chunk.GetPositionOnSpline(t);
+            
+            // Random lane (only modify X)
             float x = lanes[Random.Range(0, lanes.Length)];
-
-            // Random Z position within chunk
-            float z = Random.Range(chunkStartZ, chunkEndZ);
-
-            // Calculate local Z position within the chunk
-            float localZ = z - chunkStartZ;
-
-            // Calculate correct Y position based on chunk rotation and terrain height
-            float y = CalculateYPosition(obstacleHeight, localZ, chunk.transform.rotation.x, chunk.transform.position.y);
-
-            Vector3 position = new Vector3(x, y, z);
+            
+            // Combine: use random lane X, spline Y + baseHeight, spline Z
+            Vector3 position = new Vector3(x, splinePosition.y + baseHeight, splinePosition.z);
+            
             return position;
         }
     }
