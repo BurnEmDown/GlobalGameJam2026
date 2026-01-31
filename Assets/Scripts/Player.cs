@@ -1,12 +1,11 @@
 using System;
-using FMODUnity;
 using UnityEngine;
 using World;
 using TMPro;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private StudioEventEmitter sound;
+    public GameObject onGameFailedObject;
     
     public Transform sphere;
     public Transform cam;
@@ -97,12 +96,6 @@ public class Player : MonoBehaviour
 
     private void SetMovement()
     {
-        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.Alpha6) || 
-            Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            sound.Play();
-        }
-        
         float xMovement = 0f;
         
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.Alpha6))
@@ -112,13 +105,11 @@ public class Player : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Alpha4))
         {
-
             _strafeAngle = Mathf.Max(_strafeAngle - strafeSpeed * Time.fixedDeltaTime, -maxStrafeAngle);
             xMovement = -strafeMovementSpeed * Time.fixedDeltaTime;
         }
         else
         {
-            sound.Stop();
             _strafeAngle /= 1.01f;
             if (Mathf.Abs(_strafeAngle) < 0.001f)
             {
@@ -142,5 +133,10 @@ public class Player : MonoBehaviour
         //_targetSpeed = t * maxSpeed + (1 - t) * minSpeed;
 
         _targetLookDir = moveDir;
+    }
+
+    public void OnGameFailed()
+    {
+        onGameFailedObject.SetActive(true);
     }
 }
