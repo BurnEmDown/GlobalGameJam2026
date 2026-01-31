@@ -1,21 +1,27 @@
 using System;
 using UnityEngine;
 using World;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     public Transform sphere;
     public Transform cam;
-    public float minSpeed = 1.0f,
-        maxSpeed = 10f,
+	public TMP_Text speedText;
+    public float //minSpeed = 1.0f,
+        //maxSpeed = 10f,
         rotationSpeed = 1f,
         maxStrafeAngle = 25,
         strafeSpeed = 1,
+        strafeMovementSpeed = 5f,
+        minX = -10f,
+        maxX = 10f,
         minAngleX = -30,
         maxAngleX = 30,
         minAngleY = -85,
         maxAngleY = 60,
         mouseSensitivity = 100;
+	public int maxKph = 250;
 
     public float speed { get; set; }
     private float _targetSpeed;
@@ -24,6 +30,9 @@ public class Player : MonoBehaviour
     private float _mouseLookAngleX,
         _mouseLookAngleY;
     private Vector3 _startCamAngles;
+	private float _multiplySpeedBy = 50;
+	bool isIncreasingSpeed = true;
+	private int _currKph;
 
     void Start()
     {
@@ -74,31 +83,28 @@ public class Player : MonoBehaviour
 
     private void SetSpeed()
     {
-        if (speed < _targetSpeed)
+        if (_currKph < maxKph)
         {
-            if (speed < 0.00001f)
-                speed = 0.001f;
-            speed = Mathf.Min(speed * 1.1f, _targetSpeed);
+            speed += 0.0005f;
+            _currKph = Math.Min(Convert.ToInt32(speed * _multiplySpeedBy), maxKph);
+            speedText.text = _currKph.ToString();
+            _multiplySpeedBy *= 1.001f;
         }
-        else if (speed > _targetSpeed)
-        {
-            speed = Mathf.Max(speed / 1.1f, _targetSpeed);
-            //if (speed < 0.001f)
-            //    speed = 0;
-        }
-
-        sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
     }
 
     private void SetMovement()
     {
+        float xMovement = 0f;
+        
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.Alpha6))
         {
             _strafeAngle = Mathf.Min(_strafeAngle + strafeSpeed * Time.fixedDeltaTime, maxStrafeAngle);
+            xMovement = strafeMovementSpeed * Time.fixedDeltaTime;
         }
         else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Alpha4))
         {
             _strafeAngle = Mathf.Max(_strafeAngle - strafeSpeed * Time.fixedDeltaTime, -maxStrafeAngle);
+            xMovement = -strafeMovementSpeed * Time.fixedDeltaTime;
         }
         else
         {
@@ -108,13 +114,21 @@ public class Player : MonoBehaviour
                 _strafeAngle = 0;
             }
         }
+        
+        // Move the sphere left/right with boundary constraints
+        Vector3 spherePosition = sphere.position;
+        spherePosition.x = Mathf.Clamp(spherePosition.x + xMovement, minX, maxX);
+        sphere.position = spherePosition;
+        
+        sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
     }
+    
 
     public void EnterPlane(TerrainChunk plane, Vector3 moveDir)
     {
-        float angle = plane.transform.localEulerAngles.x - 90,
-            t = Mathf.Clamp(angle / 90f, 0, 1);
-        _targetSpeed = t * maxSpeed + (1 - t) * minSpeed;
+        //float angle = plane.transform.localEulerAngles.x - 90,
+        //    t = Mathf.Clamp(angle / 90f, 0, 1);
+        //_targetSpeed = t * maxSpeed + (1 - t) * minSpeed;
 
         _targetLookDir = moveDir;
     }

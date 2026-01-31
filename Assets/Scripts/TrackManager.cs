@@ -25,6 +25,9 @@ public class TrackManager : MonoBehaviour
                 _currPlane = plane2;
                 _moveDir = (_currPlane.planeEnd.position - _currPlane.planeStart.position).normalized;
                 player.EnterPlane(_currPlane, _moveDir);
+                
+                // Generate spline for first plane
+                plane2.GenerateSpline();
             }
             else
             {
@@ -50,6 +53,10 @@ public class TrackManager : MonoBehaviour
         plane2.transform.parent = _lastPlane.transform;
         plane2.planeStart.parent = plane2.transform;
         _lastPlane = plane2;
+        
+        // Generate spline for the new plane
+        plane2.GenerateSpline();
+        
         if (proceduralSpawner != null)
         {
             proceduralSpawner.PopulateChunk(plane2);
