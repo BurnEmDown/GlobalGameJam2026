@@ -23,7 +23,11 @@ namespace World
         public int maxPickupsPerChunk = 5;
         public float pickupHeight = 0.5f;       // Slightly above ground
         public GameObject pickupParent;        // Parent object for pickups
-    
+
+        [Header("Goal Settings")]
+        public int minGoalsPerChunk = 1;
+        public int maxGoalsPerChunk = 2;
+        
         [Header("Prefab References")]
         public Obstacle treePrefab;
         public GameObject rockPrefab;
@@ -50,6 +54,7 @@ namespace World
             // Register prefabs with the pooling service
             poolingService.InitPool<Obstacle>("Tree", 20);
             poolingService.InitPool<Pickup>("HotPickup", 20);
+            poolingService.InitPool<Goal>("Goal1", 10);
         }
     
         public void PopulateChunk(TerrainChunk chunk)
@@ -61,6 +66,7 @@ namespace World
             
             SpawnObstacles(chunk);
             SpawnPickups(chunk);
+            SpawnGoals(chunk);
             
             chunk.SetPopulated();
         }
@@ -128,6 +134,27 @@ namespace World
                     pickup.transform.position = position;
                     chunk.AddObjectAsChild(pickup.gameObject);
                     pickup.gameObject.SetActive(true);
+                });
+            }
+        }
+        
+        void SpawnGoals(TerrainChunk chunk)
+        {
+            float chunkStartZ = chunk.planeStart.transform.position.z;
+            float chunkEndZ = chunk.planeEnd.transform.position.z;
+            
+            int pickupCount = Random.Range(minGoalsPerChunk, maxGoalsPerChunk);
+        
+            for (int i = 0; i < pickupCount; i++)
+            {
+                var position = CalculatePosition(chunk, chunkStartZ, chunkEndZ);
+
+                // Spawn from pooling service
+                poolingService.GetFromPool<Goal>("Goal1", pickupParent, (Goal goal) =>
+                {
+                    goal.transform.position = position;
+                    chunk.AddObjectAsChild(goal.gameObject);
+                    goal.gameObject.SetActive(true);
                 });
             }
         }
