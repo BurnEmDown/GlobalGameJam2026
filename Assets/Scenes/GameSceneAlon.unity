@@ -179,8 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d05ef936f5de6254e975768e0bb1b3da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrackGenerator
-  proceduralSpawner: {fileID: 1775932627}
-  plane: {fileID: 1226659213062162127, guid: 4408b7bae3a958d489d99ff22c57ca1c, type: 3}
+  plane: {fileID: 7194468406095244585, guid: 4408b7bae3a958d489d99ff22c57ca1c, type: 3}
   player: {fileID: 8688132971287644309}
   length: 10
 --- !u!4 &188633008
@@ -335,17 +334,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1017180509 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3290292706674142664, guid: 0ac13e49fe2a8fb438b517dc093ef8ab, type: 3}
-  m_PrefabInstance: {fileID: 1211233233}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &1065077918
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -944,7 +932,7 @@ PrefabInstance:
     - target: {fileID: 8364517294348142467, guid: 945b873ad5618414ead0d9718a3c9034, type: 3}
       propertyPath: speedText
       value: 
-      objectReference: {fileID: 1017180509}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
