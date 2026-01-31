@@ -109,8 +109,7 @@ MonoBehaviour:
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
-  m_Cameras:
-  - {fileID: 0}
+  m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
@@ -414,6 +413,9 @@ MonoBehaviour:
   rotationSpeed: 1
   maxStrafeAngle: 30
   strafeSpeed: 30
+  strafeMovementSpeed: 5
+  minX: -4.5
+  maxX: 4.5
   minAngleX: -30
   maxAngleX: 30
   minAngleY: -30
