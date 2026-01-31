@@ -11,15 +11,12 @@ public class HUDController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI pointsText;
     [SerializeField] private TextMeshProUGUI speedText;
     
-    [Header("HUD Visual Elements")]
-    [SerializeField] private Slider speedMeter;
-    
     [Header("Display Settings")]
     [SerializeField] private bool showSpeed = true;
     
     [Header("Formatting")]
-    [SerializeField] private string pointsFormat = "Points: {0}";
-    [SerializeField] private string speedFormat = "Speed: {0:F0} km/h";
+    [SerializeField] private string pointsFormat = "{0}";
+    [SerializeField] private string speedFormat = "{0:F0}";
 
     private void Start()
     {
@@ -49,12 +46,6 @@ public class HUDController : MonoBehaviour
         if (showSpeed && speedText != null)
         {
             speedText.text = string.Format(speedFormat, currentSpeed);
-        }
-
-        // Update speed meter if using a slider
-        if (speedMeter != null)
-        {
-            speedMeter.value = currentSpeed / maxSpeed;
         }
     }
 
