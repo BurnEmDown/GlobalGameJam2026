@@ -26,8 +26,10 @@ namespace World
                 var manager = GameManager.instance;
                 manager.player.speed = 0f;
                 manager.player.enabled = false;
-                manager.gameFailed = true;
+                manager.SetGameFailed();
             }
+            
+            Destroy(gameObject);
         }
     }
 }

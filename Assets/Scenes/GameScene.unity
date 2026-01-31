@@ -292,8 +292,16 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9143182395221294308, guid: 0e215d67eabb4344faa5407f483de23f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1065077919}
+    - targetCorrespondingSourceObject: {fileID: 9143182395221294308, guid: 0e215d67eabb4344faa5407f483de23f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1211233235}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e215d67eabb4344faa5407f483de23f, type: 3}
+--- !u!1 &240524938 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5924973804700300199, guid: 0e215d67eabb4344faa5407f483de23f, type: 3}
+  m_PrefabInstance: {fileID: 240524937}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &240524939 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9143182395221294308, guid: 0e215d67eabb4344faa5407f483de23f, type: 3}
@@ -569,7 +577,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 240524939}
     m_Modifications:
     - target: {fileID: 4666597906114430873, guid: 0ac13e49fe2a8fb438b517dc093ef8ab, type: 3}
       propertyPath: m_Camera
@@ -684,6 +692,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!224 &1211233235 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8244136906571945035, guid: 0ac13e49fe2a8fb438b517dc093ef8ab, type: 3}
+  m_PrefabInstance: {fileID: 1211233233}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1456861166
 GameObject:
   m_ObjectHideFlags: 0
@@ -973,6 +986,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3218906804937190157, guid: 945b873ad5618414ead0d9718a3c9034, type: 3}
+      propertyPath: frostCam
+      value: 
+      objectReference: {fileID: 240524938}
+    - target: {fileID: 3218906804937190157, guid: 945b873ad5618414ead0d9718a3c9034, type: 3}
+      propertyPath: trackManager
+      value: 
+      objectReference: {fileID: 188633007}
     - target: {fileID: 8364517294348142467, guid: 945b873ad5618414ead0d9718a3c9034, type: 3}
       propertyPath: speedText
       value: 
@@ -1077,5 +1098,4 @@ SceneRoots:
   - {fileID: 1070312185}
   - {fileID: 240524937}
   - {fileID: 4016021848607703432}
-  - {fileID: 1211233233}
   - {fileID: 652475791}

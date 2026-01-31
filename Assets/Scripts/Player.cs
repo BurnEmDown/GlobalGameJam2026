@@ -5,6 +5,8 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
+    public GameObject onGameFailedObject;
+    
     public Transform sphere;
     public Transform cam;
 	public TMP_Text speedText;
@@ -131,5 +133,10 @@ public class Player : MonoBehaviour
         //_targetSpeed = t * maxSpeed + (1 - t) * minSpeed;
 
         _targetLookDir = moveDir;
+    }
+
+    public void OnGameFailed()
+    {
+        onGameFailedObject.SetActive(true);
     }
 }

@@ -79,6 +79,8 @@ public class GameManager : MonoBehaviour
 
     private void GameStart()
     {
+        StopAllCoroutines();
+        
         // Create delays
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
@@ -96,16 +98,18 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(GameActive());
 
         // Mission end phase
-        yield return StartCoroutine(GameEnding());
+        //yield return StartCoroutine(GameEnding());
 
         // Reload scene to restart
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameStart();
     }
 
     private IEnumerator GameStarting()
     {
         Debug.Log("Game Is Starting");
-        yield return m_StartWait;
+        yield return new WaitForSeconds(m_StartDelay);
+        gameFailed = false;
+        gameComplete = false;
         SceneManager.LoadScene("GameScene");
     }
     
@@ -132,8 +136,9 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator GameEnding()
     {
-        Debug.Log("Game Is Ending");
-        yield return m_EndWait;
+        Debug.Log("Game Is Ending, waiting for " + m_EndDelay);
+        
+        yield return new WaitForSeconds(m_EndDelay);
     }
 
     /// <summary>
@@ -167,6 +172,11 @@ public class GameManager : MonoBehaviour
     {
         return currentPoints;
     }
-    
-    
+
+
+    public void SetGameFailed()
+    {
+        gameFailed = true;
+        player.OnGameFailed();
+    }
 }
