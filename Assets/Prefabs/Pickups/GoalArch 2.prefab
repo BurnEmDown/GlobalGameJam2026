@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 7763437839628530620}
   - component: {fileID: 5095053297699915033}
   - component: {fileID: 5795840230592263319}
+  - component: {fileID: 8756851533431026179}
   m_Layer: 0
   m_Name: GoalArch 2
   m_TagString: Goal
@@ -167,6 +168,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4531534303669334137}
+  - {fileID: 1365895609708614064}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &5095053297699915033
@@ -206,3 +208,108 @@ MonoBehaviour:
   hasBeenCleared: 0
   clearEffect: {fileID: 0}
   clearSound: {fileID: 0}
+--- !u!114 &8756851533431026179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3552124132901950047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: Player
+  EventReference:
+    Guid:
+      Data1: -1585107822
+      Data2: 1121572625
+      Data3: 2055649972
+      Data4: 1910841956
+    Path: event:/Goal
+  Event: 
+  EventPlayTrigger: 3
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1001 &4765303098535468078
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7763437839628530620}
+    m_Modifications:
+    - target: {fileID: 1034700375001605414, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_Color.g
+      value: 0.30474383
+      objectReference: {fileID: 0}
+    - target: {fileID: 1034700375001605414, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5361363
+      objectReference: {fileID: 0}
+    - target: {fileID: 1034700375001605414, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_Intensity
+      value: 10.64658
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433373, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_Name
+      value: CFXR4 Bouncing Glows Bubble (Blue Purple) 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+--- !u!4 &1365895609708614064 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5824670795371433374, guid: bd546f741f25e644bbee7911b3ee63d5, type: 3}
+  m_PrefabInstance: {fileID: 4765303098535468078}
+  m_PrefabAsset: {fileID: 0}

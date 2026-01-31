@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8408381632287812233}
   - component: {fileID: -2986673700059437547}
   - component: {fileID: 607479960847676663}
+  - component: {fileID: 6167624604540176539}
   m_Layer: 0
   m_Name: Stone
   m_TagString: Obstacle
@@ -69,6 +70,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World.Obstacle
   aimConstraint: {fileID: 607479960847676663}
+  collideEffect: {fileID: 9157105887711914197, guid: 2852b31d63a86fb49ab27861e4fe8745, type: 3}
 --- !u!895512359 &607479960847676663
 AimConstraint:
   m_ObjectHideFlags: 0
@@ -92,6 +94,37 @@ AimConstraint:
   m_Active: 0
   m_IsLocked: 0
   m_Sources: []
+--- !u!114 &6167624604540176539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5025049549912144506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: Player
+  EventReference:
+    Guid:
+      Data1: 1052648394
+      Data2: 1297627711
+      Data3: 395183238
+      Data4: 1845917410
+    Path: event:/Crash
+  Event: 
+  EventPlayTrigger: 3
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &5845031517092576094
 GameObject:
   m_ObjectHideFlags: 0

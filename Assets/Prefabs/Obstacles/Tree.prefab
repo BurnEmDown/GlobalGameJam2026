@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -8436196120149913423}
   - component: {fileID: 1232037194564401154}
   - component: {fileID: 8357776843580378703}
+  - component: {fileID: 8074044745083250953}
   m_Layer: 0
   m_Name: Tree
   m_TagString: Obstacle
@@ -92,6 +93,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World.Obstacle
   aimConstraint: {fileID: 1232037194564401154}
+  collideEffect: {fileID: 9157105887711914197, guid: 2852b31d63a86fb49ab27861e4fe8745, type: 3}
+--- !u!114 &8074044745083250953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2745256087835639086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: Player
+  EventReference:
+    Guid:
+      Data1: 1052648394
+      Data2: 1297627711
+      Data3: 395183238
+      Data4: 1845917410
+    Path: event:/Crash
+  Event: 
+  EventPlayTrigger: 3
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &4007995231330809675
 GameObject:
   m_ObjectHideFlags: 0

@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 7636783499301394899}
   - component: {fileID: 3983922107660329885}
   - component: {fileID: 2617362172661074527}
+  - component: {fileID: 558407879236373597}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -281,6 +282,37 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &558407879236373597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5548282546694871791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1529979509
+      Data2: 1194860330
+      Data3: 2002770588
+      Data4: -895114824
+    Path: event:/Wind Loop
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &7749271087434449703
 GameObject:
   m_ObjectHideFlags: 0
