@@ -579,17 +579,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14f15b48bfa439448b27e6d9b9d459a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HUDController
-  distanceText: {fileID: 0}
-  speedText: {fileID: 0}
-  frostLevelText: {fileID: 0}
-  frostMeterFill: {fileID: 0}
-  speedMeter: {fileID: 0}
+  pointsText: {fileID: 4980045125479773801}
+  speedText: {fileID: 3290292706674142664}
   showSpeed: 1
-  showFrostLevel: 0
-  showFrostMeter: 1
-  distanceFormat: 'Distance: {0:F0}m'
-  speedFormat: 'Speed: {0:F0} km/h'
-  frostFormat: 'Frost: {0:F0}%'
+  pointsFormat: '{0}'
+  speedFormat: '{0:F0}'
 --- !u!1 &7765896580071089491
 GameObject:
   m_ObjectHideFlags: 0

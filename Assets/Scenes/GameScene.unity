@@ -867,7 +867,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6284931699277518198, guid: 0ac13e49fe2a8fb438b517dc093ef8ab, type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: HUD Canvas
       objectReference: {fileID: 0}
     - target: {fileID: 8244136906571945035, guid: 0ac13e49fe2a8fb438b517dc093ef8ab, type: 3}
       propertyPath: m_Pivot.x
@@ -968,7 +968,7 @@ GameObject:
   - component: {fileID: 1280742033}
   - component: {fileID: 1280742032}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1512,13 +1512,19 @@ MonoBehaviour:
   obstacleDensity: 1
   obstacleHeight: 0
   obstacleParent: {fileID: 11126072}
+  treeSpawnChance: 0.6
   minPickupsPerChunk: 2
   maxPickupsPerChunk: 5
   pickupHeight: 0
   pickupParent: {fileID: 682836147}
+  spawnGoalInChunk: 0
+  goalHeight: 1
+  goalParent: {fileID: 0}
   treePrefab: {fileID: 8357776843580378703, guid: 3766db8eea18a45b1b79af4f94d6d2be, type: 3}
-  rockPrefab: {fileID: 0}
+  rockPrefab: {fileID: -2986673700059437547, guid: 285f11d8e962e46cc8f806ff350548a5, type: 3}
   hotPickupPrefab: {fileID: 3715654014592440983, guid: 0e86421a04cb84a658295a6edb3e29b3, type: 3}
+  goalPrefab: {fileID: 5795840230592263319, guid: 0a3978fc1ca5e433b9d84fcf9e2bd933, type: 3}
+  gameManager: {fileID: 0}
   minSpacing: 15
 --- !u!4 &1775932628
 Transform:
