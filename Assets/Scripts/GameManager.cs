@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public HUDController HUD;
     public Player player;
-    public FlakeparticleCleaner cleaner;
+    public ClearParticlesAlon cleaner;
 
     [Header("Score Tracking")]
     private int currentPoints = 0;
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
         {
             HUD = FindFirstObjectByType<HUDController>();
             player = FindFirstObjectByType<Player>();
-            cleaner = FindFirstObjectByType<FlakeparticleCleaner>();
+            cleaner = FindFirstObjectByType<ClearParticlesAlon>();
             
             // Reset points when loading game scene
             currentPoints = 0;

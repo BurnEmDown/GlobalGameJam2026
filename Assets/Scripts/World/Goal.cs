@@ -18,6 +18,7 @@ namespace World
         void OnEnable()
         {
             hasBeenCleared = false;
+            gameManager = GameManager.instance;
         }
 
         /// <summary>

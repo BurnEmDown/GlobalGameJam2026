@@ -25,7 +25,7 @@ namespace World
         void Collect()
         {
             Debug.Log("Collecting");
-            GameManager.instance.cleaner.CLearHalfOfAllFlakes();
+            GameManager.instance.cleaner.ClearParticles();
         
             // Spawn particle effect
             if (collectEffect != null)

@@ -20,33 +20,31 @@ public class ClearParticlesAlon : MonoBehaviour
     {
         if (clear != _clear)
 		{
-			//ParticleSystem.EmissionModule emission = _particles.emission;
-			//ParticleSystem.MinMaxCurve rateOverTime = emission.rateOverTime;
-			//emission.rateOverTime = 0;
-			
-			ParticleSystem.Particle[] particles = new ParticleSystem.Particle[_particles.main.maxParticles];
-			int count = _particles.GetParticles(_particleList);
-
-    for (int i = 0; i < count; i++)
-    {
-		bool keepParticle = Random.Range(0, 10) == 0;
-		if (!keepParticle)
-		{
-			_particleList[i].velocity = Random.insideUnitCircle.normalized * Random.Range(10, 100);
-		}
-    }
-
-    _particles.SetParticles(_particleList, count);
-	
-	//emission.rateOverTime = rateOverTime;
-			StartCoroutine(StopParticles(count));
+			ClearParticles();
 			_clear = clear;
 		}
     }
 	
+	public void ClearParticles()
+	{
+		ParticleSystem.Particle[] particles = new ParticleSystem.Particle[_particles.main.maxParticles];
+		int count = _particles.GetParticles(_particleList);
+
+		for (int i = 0; i < count; i++)
+		{
+			bool keepParticle = Random.Range(0, 10) == 0;
+			if (!keepParticle)
+			{
+				_particleList[i].velocity = Random.insideUnitCircle.normalized * Random.Range(10, 100);
+			}
+		}
+
+		_particles.SetParticles(_particleList, count);
+		StartCoroutine(StopParticles(count));
+	}
+	
 	private IEnumerator StopParticles(int count)
 	{
-		StopAllCoroutines();
 		yield return new WaitForSeconds(2);
 				int count2 = _particles.GetParticles(_particleList);
     for (int i = 0; i < count; i++)
