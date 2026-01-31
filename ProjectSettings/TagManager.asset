@@ -8,6 +8,7 @@ TagManager:
   - Obstacle
   - Goal
   - Terrain
+  - Goal
   layers:
   - Default
   - TransparentFX

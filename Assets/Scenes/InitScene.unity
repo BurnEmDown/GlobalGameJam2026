@@ -165,11 +165,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkiLoader
   prefabEntries:
   - key: TerrainChunk
-    prefab: {fileID: 147837945530276576, guid: 045f051ee04bf4f5984bc66ea65ae9e5, type: 3}
+    prefab: {fileID: 1172931738585655600, guid: 4408b7bae3a958d489d99ff22c57ca1c, type: 3}
   - key: Tree
     prefab: {fileID: 2745256087835639086, guid: 3766db8eea18a45b1b79af4f94d6d2be, type: 3}
   - key: HotPickup
     prefab: {fileID: 5609505607790079833, guid: 0e86421a04cb84a658295a6edb3e29b3, type: 3}
+  - key: Goal1
+    prefab: {fileID: 3552124132901950047, guid: 0a3978fc1ca5e433b9d84fcf9e2bd933, type: 3}
   baseUrl: https://api.example.com
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

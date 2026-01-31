@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
     {
-        if (scene.name.Contains("GameScene"))
+        if (scene.name == "GameScene")
         {
             HUD = FindFirstObjectByType<HUDController>();
             player = FindFirstObjectByType<Player>();
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Game Is Starting");
         yield return m_StartWait;
-        SceneManager.LoadScene("Scenes/GameSceneAlon");
+        SceneManager.LoadScene("Scenes/GameScene");
     }
     
     private IEnumerator GameActive()
