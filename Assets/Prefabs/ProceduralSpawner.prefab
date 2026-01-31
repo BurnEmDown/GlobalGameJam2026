@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4707711075987257774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5477491497764896382}
+  - component: {fileID: 6949272103188130433}
+  m_Layer: 0
+  m_Name: ProceduralSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5477491497764896382
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4707711075987257774}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6949272103188130433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4707711075987257774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cafd92e4abd24ad0b001b5ec29faef64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::World.ProceduralSpawner
+  mainCamera: {fileID: 0}
+  lanes:
+  - 2
+  - 1
+  - 0
+  - 1
+  - 2
+  minObstaclesPerChunk: 0
+  maxObstaclesPerChunk: 2
+  obstacleDensity: 1
+  obstacleHeight: 0
+  obstacleParent: {fileID: 0}
+  minPickupsPerChunk: 2
+  maxPickupsPerChunk: 5
+  pickupHeight: 0
+  pickupParent: {fileID: 0}
+  treePrefab: {fileID: 8357776843580378703, guid: 3766db8eea18a45b1b79af4f94d6d2be, type: 3}
+  rockPrefab: {fileID: 0}
+  hotPickupPrefab: {fileID: 3715654014592440983, guid: 0e86421a04cb84a658295a6edb3e29b3, type: 3}
+  minSpacing: 15
