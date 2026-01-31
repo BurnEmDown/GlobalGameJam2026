@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
     {
-        if (scene.name.Contains("GameScene"))
+        if (scene.name == "GameScene")
         {
             HUD = FindFirstObjectByType<HUDController>();
             player = FindFirstObjectByType<Player>();
