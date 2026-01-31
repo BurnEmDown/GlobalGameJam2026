@@ -1,12 +1,15 @@
 using System;
 using UnityEngine;
+using World;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     public Transform sphere;
     public Transform cam;
-    public float minSpeed = 1.0f,
-        maxSpeed = 10f,
+	public TMP_Text speedText;
+    public float //minSpeed = 1.0f,
+        //maxSpeed = 10f,
         rotationSpeed = 1f,
         maxStrafeAngle = 25,
         strafeSpeed = 1,
@@ -15,6 +18,7 @@ public class Player : MonoBehaviour
         minAngleY = -85,
         maxAngleY = 60,
         mouseSensitivity = 100;
+	public int maxKph = 250;
 
     public float speed { get; set; }
     private float _targetSpeed;
@@ -23,6 +27,9 @@ public class Player : MonoBehaviour
     private float _mouseLookAngleX,
         _mouseLookAngleY;
     private Vector3 _startCamAngles;
+	private float _multiplySpeedBy = 50;
+	bool isIncreasingSpeed = true;
+	private int _currKph;
 
     void Start()
     {
@@ -67,19 +74,37 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (speed < _targetSpeed)
-        {
-            if (speed < 0.00001f)
-                speed = 0.001f;
-            speed = Mathf.Min(speed * 1.1f, _targetSpeed);
-        }
-        else if (speed > _targetSpeed)
-        {
-            speed = Mathf.Max(speed / 1.1f, _targetSpeed);
-            //if (speed < 0.001f)
-            //    speed = 0;
-        }
+        SetSpeed();
+        SetMovement();
+    }
 
+    private void SetSpeed()
+    {
+		if (_currKph < maxKph)
+		{
+			speed += 0.0005f;
+			_currKph = Math.Min(Convert.ToInt32(speed * _multiplySpeedBy), maxKph);
+		speedText.text = _currKph.ToString();
+		_multiplySpeedBy *= 1.001f;	
+		}
+        //if (speed < _targetSpeed)
+        //{
+        //    if (speed < 0.00001f)
+        //        speed = 0.001f;
+        //    speed = Mathf.Min(speed * 1.1f, _targetSpeed);
+        //}
+        //else if (speed > _targetSpeed)
+        //{
+        //    speed = Mathf.Max(speed / 1.1f, _targetSpeed);
+        //    //if (speed < 0.001f)
+        //    //    speed = 0;
+        //}
+
+        sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
+    }
+
+    private void SetMovement()
+    {
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.Alpha6))
         {
             _strafeAngle = Mathf.Min(_strafeAngle + strafeSpeed * Time.fixedDeltaTime, maxStrafeAngle);
@@ -96,14 +121,13 @@ public class Player : MonoBehaviour
                 _strafeAngle = 0;
             }
         }
-        sphere.transform.eulerAngles = new Vector3(0, 0, _strafeAngle);
     }
 
     public void EnterPlane(Plane plane, Vector3 moveDir)
     {
-        float angle = plane.transform.localEulerAngles.x - 90,
-            t = Mathf.Clamp(angle / 90f, 0, 1);
-        _targetSpeed = t * maxSpeed + (1 - t) * minSpeed;
+        //float angle = plane.transform.localEulerAngles.x - 90,
+        //    t = Mathf.Clamp(angle / 90f, 0, 1);
+        //_targetSpeed = t * maxSpeed + (1 - t) * minSpeed;
 
         _targetLookDir = moveDir;
     }

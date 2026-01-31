@@ -5,6 +5,6 @@ public class SkiLoader : Loader
 {
     public override void OnInitComplete()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("Scenes/UI");
     }
 }

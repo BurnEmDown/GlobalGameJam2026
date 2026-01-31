@@ -24,17 +24,14 @@ namespace World
     
         void Collect()
         {
-            // TODO: use pooling service for effects and sounds
-            
-            // Notify FrostManager (Person C will implement this)
-            // FrostManager.Instance.ReduceFrost(frostReduction);
+            Debug.Log("Collecting");
+            GameManager.instance.cleaner.ClearParticles();
         
             // Spawn particle effect
             if (collectEffect != null)
             {
                 Instantiate(collectEffect, transform.position, Quaternion.identity);
             }
-        
             
             // Return to pool or destroy
             gameObject.SetActive(false);
