@@ -15,11 +15,6 @@ public class SkiLoader : Loader
     
     private IEnumerator LoadGameAsync()
     {
-        // Start an asynchronous operation to load the scene
-        AsyncOperation async = SceneManager.LoadSceneAsync("UI");
-
-        // Don't let the scene start until all Studio Banks have finished loading
-        async.allowSceneActivation = false;
         // Iterate all the Studio Banks and start them loading in the background
         // including the audio sample data
         foreach (var bank in Banks)
@@ -39,6 +34,13 @@ public class SkiLoader : Loader
         {
             yield return null;
         }
+        
+        // Start an asynchronous operation to load the scene
+        AsyncOperation async = SceneManager.LoadSceneAsync("UI");
+
+        // Don't let the scene start until all Studio Banks have finished loading
+        async.allowSceneActivation = false;
+        
         // Allow the scene to be activated. This means that any OnActivated() or Start()
         // methods will be guaranteed that all FMOD Studio loading will be completed and
         // there will be no delay in starting events
