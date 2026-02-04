@@ -45,6 +45,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if(GameManager.instance.isPaused) return;
+        
         PlayWoosh();
         
         float mouseX = Input.GetAxis("Mouse X"),
@@ -83,6 +85,8 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(GameManager.instance.isPaused) return;
+        
         SetSpeed();
         SetMovement();
     }

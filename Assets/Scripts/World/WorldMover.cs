@@ -43,6 +43,8 @@ namespace World
         
         public void ObservedUpdate()
         {
+            if(GameManager.instance.isPaused) return;
+            
             // Move all registered objects
             for (int i = movingObjects.Count - 1; i >= 0; i--)
             {

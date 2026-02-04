@@ -65,6 +65,8 @@ public class TrackManager : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(GameManager.instance.isPaused) return;
+        
         _currPlane.transform.position -= player.speed * _moveDir;
         if (Vector3.Dot(-_currPlane.planeEnd.position, _moveDir) >= 0)
         {

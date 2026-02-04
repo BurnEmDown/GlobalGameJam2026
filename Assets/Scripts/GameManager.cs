@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
         Game
     }
     
+    public bool isPaused = false;
     private GameState m_CurrentState;
     private WaitForSeconds m_StartWait;
     private WaitForSeconds m_EndWait;
@@ -36,15 +37,15 @@ public class GameManager : MonoBehaviour
 
     [Header("Volume")]
     [Range(0, 1)]
-    public float MasterBusVolume = 0;
-    [Range(0, 1)]
     public float MusicBusVolume = 0;
     [Range(0, 1)]
     public float SfxBusVolume = 0;
+    [Range(0, 1)]
+    public float windBusVolume = 0;
 
-    private VCA vcaMusic;
-    private VCA vcaSFX;
-    private VCA vcaWind;
+    public VCA vcaMusic;
+    public VCA vcaSFX;
+    public VCA vcaWind;
 
     // Set volume methods (volume range: 0.0 to 1.0)
     public void SetMusicVolume(float volume)
@@ -95,8 +96,6 @@ public class GameManager : MonoBehaviour
         }
     }
     
-   
-    
     public Slider musicSlider;
     public Slider sfxSlider;
     public Slider windSlider;
@@ -108,12 +107,27 @@ public class GameManager : MonoBehaviour
         vcaMusic = RuntimeManager.GetVCA("vca:/Music");
         vcaSFX = RuntimeManager.GetVCA("vca:/SFX");
         vcaWind = RuntimeManager.GetVCA("vca:/Wind");
+
+        // Set the volume from settings
+        SetMusicVolume(MusicBusVolume);
+        SetSFXVolume(SfxBusVolume);
+        SetWindVolume(windBusVolume);
+        
+        // Set the slider value to the new volume
         musicSlider.value = GetMusicVolume();
         sfxSlider.value = GetSFXVolume();
         windSlider.value = GetWindVolume();
+        
         m_CurrentState = GameState.MainMenu;
     }
-    
+
+    private void Update()
+    {
+        // vcaMusic.setVolume(MusicBusVolume);
+        // vcaMusic.setVolume(MusicBusVolume);
+        // vcaMusic.setVolume(MusicBusVolume);
+    }
+
     public float GetMusicVolume()
     {
         vcaMusic.getVolume(out float volume);
