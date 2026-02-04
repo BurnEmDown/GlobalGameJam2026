@@ -95,6 +95,8 @@ public class GameManager : MonoBehaviour
         }
     }
     
+   
+    
     public Slider musicSlider;
     public Slider sfxSlider;
     public Slider windSlider;

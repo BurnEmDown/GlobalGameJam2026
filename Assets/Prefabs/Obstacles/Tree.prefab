@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7142245693185398022}
   - component: {fileID: -8436196120149913423}
-  - component: {fileID: 1232037194564401154}
   - component: {fileID: 8357776843580378703}
   - component: {fileID: 8074044745083250953}
   m_Layer: 0
@@ -57,29 +56,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.4, y: 3.8548954, z: 0.2}
   m_Center: {x: 0.091030866, y: -1.7273414, z: 0}
---- !u!895512359 &1232037194564401154
-AimConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2745256087835639086}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_RotationAtRest: {x: 0, y: 0, z: 0}
-  m_RotationOffset: {x: 0, y: 0, z: 0}
-  m_AimVector: {x: 0, y: 0, z: 1}
-  m_UpVector: {x: 0, y: 1, z: 0}
-  m_WorldUpVector: {x: 0, y: 1, z: 0}
-  m_WorldUpObject: {fileID: 0}
-  m_UpType: 0
-  m_AffectRotationX: 0
-  m_AffectRotationY: 1
-  m_AffectRotationZ: 1
-  m_Active: 0
-  m_IsLocked: 0
-  m_Sources: []
 --- !u!114 &8357776843580378703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,8 +68,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b189107b4e046a3b92f9100d6e9c818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World.Obstacle
-  aimConstraint: {fileID: 1232037194564401154}
-  collideEffect: {fileID: 9157105887711914197, guid: 2852b31d63a86fb49ab27861e4fe8745, type: 3}
 --- !u!114 &8074044745083250953
 MonoBehaviour:
   m_ObjectHideFlags: 0

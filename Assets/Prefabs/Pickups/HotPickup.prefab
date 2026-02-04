@@ -70,9 +70,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c957f578a8d4fa59e7378897261a4ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World.Pickup
-  aimConstraint: {fileID: 8960985347751910952}
   frostReduction: 0.25
   collectEffect: {fileID: 0}
+  collectSound: {fileID: 0}
 --- !u!895512359 &8960985347751910952
 AimConstraint:
   m_ObjectHideFlags: 0
@@ -220,7 +220,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2275721571885089005, guid: 9dec83e7e41150945897963baf4bf35f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.0372
       objectReference: {fileID: 0}
     - target: {fileID: 2275721571885089005, guid: 9dec83e7e41150945897963baf4bf35f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -264,7 +264,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7710086954383210093, guid: 9dec83e7e41150945897963baf4bf35f, type: 3}
       propertyPath: m_Intensity
-      value: 0
+      value: 9.881841
       objectReference: {fileID: 0}
     - target: {fileID: 8986935675043883179, guid: 9dec83e7e41150945897963baf4bf35f, type: 3}
       propertyPath: m_Materials.Array.size
